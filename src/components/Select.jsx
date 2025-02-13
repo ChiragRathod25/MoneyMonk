@@ -1,11 +1,15 @@
 import React, { useId } from "react";
 
-function Select({ options = "", className = "", label, ...props }, ref) {
+function Select({ options = [], className = "", label,selectedOption, ...props }, ref) {
+  console.log("default",label,selectedOption);
   const id = useId();
   return (
     <div className="w-full">
       {label && (
-        <label className="inline-block mb-1 pl-1" htmlFor={id}>
+        <label
+          className="inline-block mb-1 pl-1 text-dark-blue font-semibold"
+          htmlFor={id}
+        >
           {label}
         </label>
       )}
@@ -16,7 +20,7 @@ function Select({ options = "", className = "", label, ...props }, ref) {
         id={id}
       >
         {options?.map((option) => (
-          <option key={option} value={option}>
+          <option key={option} value={option} selected={selectedOption===option}>
             {option}
           </option>
         ))}

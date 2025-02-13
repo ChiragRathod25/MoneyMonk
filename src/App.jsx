@@ -7,6 +7,8 @@ import { Header, Footer } from "./components";
 import authService from "./appwrite/auth";
 import { useDispatch } from "react-redux";
 import { login, logout } from "./Slices/authSlice";
+import transactionService from "./appwrite/transactionServices";
+
 
 function App() {
   console.log("App.jsx loaded");

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Input, Button, Select } from "./index";
+import { Input, Button, Error, Loading } from "./index";
 import { useForm } from "react-hook-form";
 import authService from "../appwrite/auth";
 import { useDispatch } from "react-redux";
@@ -19,14 +19,13 @@ function Register() {
     try {
       setLoading(true);
       console.log(data);
-      // await authService.logout()
       const newUser = await authService.createNewUser(data);
       if (newUser) {
         const user = await authService.getCurrentUser().then((response) => {
           console.log("Registered current user", response);
 
           if (response) {
-            dispatch(login({data}));
+            dispatch(login({ data }));
             navigate("/");
           } else {
             dispatch(logout());
@@ -44,36 +43,50 @@ function Register() {
 
   if (error && error.length > 0) {
     return (
-      <div>
-        Error : <p>{error}</p>
+      <div className="min-h-screen flex items-center justify-center bg-light-gray">
+        <Error errorMsg={error} />
       </div>
     );
   }
+
   if (loading) {
     return (
-      <div>
-        <h2>Loading...</h2>
+      <div className="min-h-screen flex items-center justify-center bg-light-gray">
+        <Loading />
       </div>
     );
   }
-  return (
-    <div>
-      <form onSubmit={handleSubmit(createUser)}>
-        <Input
-          label="Email"
-          type="email"
-          placeholder="Enter email"
-          {...register("email", { required: true })}
-        />
-        <Input
-          label="Password"
-          type="password"
-          placeholder="Enter Password"
-          {...register("password", { required: true })}
-        />
 
-        <Button type="submit"> Sign Up</Button>
-      </form>
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-light-gray">
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h2 className="text-2xl font-bold text-dark-blue mb-6">Sign Up</h2>
+        <form onSubmit={handleSubmit(createUser)}>
+        <Input
+            label="Name"
+            type="text"
+            placeholder="Enter Name"
+            {...register("name", { required: true })}
+          />
+          <Input
+            label="Email"
+            type="email"
+            placeholder="Enter email"
+            {...register("email", { required: true })}
+          />
+          <Input
+            label="Password"
+            type="password"
+            placeholder="Enter Password"
+            {...register("password", { required: true })}
+          />
+          
+         
+          <Button type="submit" className="w-full mt-4">
+            Sign Up
+          </Button>
+        </form>
+      </div>
     </div>
   );
 }

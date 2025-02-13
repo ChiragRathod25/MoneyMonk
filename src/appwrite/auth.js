@@ -10,10 +10,10 @@ export class AuthServices {
     this.client.setProject(config.appwriteProjectId);
     this.account = new Account(this.client);
   }
-  async createNewUser({email,password}) {
+  async createNewUser({email,password,name}) {
     // eslint-disable-next-line no-useless-catch
     try {
-      const response = await this.account.create(ID.unique(), email, password);
+      const response = await this.account.create(ID.unique(), email, password,name);
       if (response) {
         return this.login({ email, password });
       } else {
