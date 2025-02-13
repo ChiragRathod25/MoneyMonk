@@ -25,7 +25,7 @@ function Home() {
     <div className="min-h-screen bg-gray-50 text-gray-800">
 
       {/* 🌟 Hero Section */}
-      <header className="bg-gradient-to-r from-indigo-600 to-blue-500 text-white py-16 text-center rounded-b-3xl shadow-lg">
+      <section className="bg-gradient-to-r from-indigo-600 to-blue-500 text-white py-16 text-center rounded-b-3xl shadow-lg">
         <h1 className="text-5xl font-extrabold drop-shadow-md">
           {greeting}, {userName || "Welcome to Your Finance Tracker"} 👋
         </h1>
@@ -44,7 +44,7 @@ function Home() {
             </Button>
           </Link>
         </div>
-      </header>
+      </section>
 
    
       {/* ✅ Dashboard Summary */}

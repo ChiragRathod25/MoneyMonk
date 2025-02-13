@@ -7,7 +7,6 @@ import { Header, Footer } from "./components";
 import authService from "./appwrite/auth";
 import { useDispatch } from "react-redux";
 import { login, logout } from "./Slices/authSlice";
-import transactionService from "./appwrite/transactionServices";
 
 
 function App() {
@@ -23,7 +22,8 @@ function App() {
       setLoading(true);
       authService.getCurrentUser().then((response) => {
         if (response) {
-          dispatch(login({ response }));
+          console.log("App.jsx current user response", response);
+          dispatch(login(response));
         } else {
           dispatch(logout());
         }

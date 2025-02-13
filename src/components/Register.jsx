@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Input, Button, Error, Loading } from "./index";
 import { useForm } from "react-hook-form";
 import authService from "../appwrite/auth";
@@ -7,6 +7,13 @@ import { login, logout } from "../Slices/authSlice";
 import { useNavigate } from "react-router-dom";
 
 function Register() {
+  const isAuthencticated = Boolean(localStorage.getItem("authStatus"));
+  useEffect(() => {
+    if (isAuthencticated) {
+      navigate("/");
+    }
+  }, [isAuthencticated]);
+
   const { register, handleSubmit } = useForm();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");

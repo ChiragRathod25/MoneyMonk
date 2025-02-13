@@ -8,6 +8,12 @@ import authService from "../appwrite/auth";
 import { login, logout } from "../Slices/authSlice";
 
 function Login() {
+  const isAuthencticated = Boolean(localStorage.getItem("authStatus"));
+  useEffect(() => {
+    if (isAuthencticated) {
+      navigate("/");
+    }
+  }, [isAuthencticated]);
   const { register, handleSubmit } = useForm();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -25,7 +31,8 @@ function Login() {
       if (newUser) {
         const user = await authService.getCurrentUser();
         if (user) {
-          dispatch(login({ data }));
+          console.log("Current User", user);            
+          dispatch(login(user));
           navigate("/");
         } else {
           dispatch(logout());

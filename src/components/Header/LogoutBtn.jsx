@@ -19,6 +19,7 @@ function LogoutBtn() {
     try {
       await authService.logout();
       dispatch(logout());
+      window.localStorage.removeItem("authStatus");
       window.location.reload();
     } catch (error) {
       console.error("Error while logging out:", error);

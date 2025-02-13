@@ -8,6 +8,7 @@ import Footer from "./Footer/Footer"
 import Loading from "./Loading"
 import Error from "./Error"
 import TransactionForm from "./Form/TransactionForm"
+import AuthLayout from "./AuthLayout"
 export{
     Loading,
     Error,
@@ -18,6 +19,7 @@ export{
     Register,
     Header,
     Footer,
-    TransactionForm
+    TransactionForm,
+    AuthLayout
     
 }
