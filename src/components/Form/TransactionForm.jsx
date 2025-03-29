@@ -92,7 +92,7 @@ function TransactionForm({ transaction, transacationType }) {
 
   const createTransaction = async (data) => {
     console.log("createTransaction called");
-    transactionService
+    await transactionService
       .createTrasanction(data)
       .then((response) => {
         console.log("createTransaction response");

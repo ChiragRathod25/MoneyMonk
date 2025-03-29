@@ -5,7 +5,7 @@ import App from "./App.jsx";
 import { Provider } from "react-redux";
 import store from "./store/store.js";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { SignUp, Login, Home, AddExpense, AddIncome } from "./pages";
+import { SignUp, Login, Home, AddExpense, AddIncome,AddCategory,AddSubCategory } from "./pages";
 import {AuthLayout} from "./components"
 
 const router = createBrowserRouter([
@@ -31,6 +31,22 @@ const router = createBrowserRouter([
           <AuthLayout authentication={false}>
             <SignUp />
           </AuthLayout>
+        ),
+      },
+      {
+        path: "/category",
+        element: (
+          // <AuthLayout>
+            <AddCategory />
+          // </AuthLayout>
+        ),
+      },
+      {
+        path: "/subcategory",
+        element: (
+          // <AuthLayout>
+            <AddSubCategory />
+          // </AuthLayout>
         ),
       },
       {

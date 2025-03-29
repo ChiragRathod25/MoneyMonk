@@ -9,6 +9,8 @@ import Loading from "./Loading"
 import Error from "./Error"
 import TransactionForm from "./Form/TransactionForm"
 import AuthLayout from "./AuthLayout"
+import CategoryForm from "./Form/Category/CategoryForm"
+import SubCategoryForm from "./Form/SubCategory/SubCategoryForm"
 export{
     Loading,
     Error,
@@ -20,6 +22,8 @@ export{
     Header,
     Footer,
     TransactionForm,
-    AuthLayout
+    AuthLayout,
+    CategoryForm,
+    SubCategoryForm
     
 }

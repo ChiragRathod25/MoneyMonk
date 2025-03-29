@@ -1,6 +1,6 @@
 import React, { useId } from "react";
 
-function Select({ options = [], className = "", label,selectedOption, ...props }, ref) {
+function Select({ options = [], className = "", label,selectedOption="", ...props }, ref) {
   console.log("default",label,selectedOption);
   const id = useId();
   return (

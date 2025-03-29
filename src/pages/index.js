@@ -3,6 +3,8 @@ import Login from "./Login";
 import Home from "./Home";
 import AddIncome from "./Income/AddIncome"
 import AddExpense from "./Expense/AddExpense"
+import AddCategory from "./Category/AddCategory"
+import AddSubCategory from "./SubCategory/AddSubcategory"
 
 
 
@@ -11,7 +13,10 @@ export {
     Login,
     Home,
     AddIncome,
-    AddExpense
+    AddExpense,
+    AddCategory,
+    AddSubCategory
+
     
 
 }

@@ -1,5 +1,6 @@
 import config from "../conf/config";
-import { Client, Databases } from "appwrite";
+import { Client, Databases,ID } from "appwrite";
+
 
 export class CategoryServices {
     client = new Client();
@@ -12,6 +13,23 @@ export class CategoryServices {
         console.log("CategoryServices initialized");
     }
    
+    async addCategory({categoryName,categoryType}) {
+        console.log("addCategory called");
+        try {
+          
+            //unique document Id should be given from the database
+            const response = await this.database.createDocument(
+                config.appwriteDatabaseId,
+                config.appwriteCollection.categories,
+                ID.unique(),
+                { name: categoryName, type: categoryType }
+            );
+            return response;
+        } catch (error) {
+            console.error("Error adding category:", error);
+            throw error;
+        }
+    }
     async getAllCategories() {
         console.log("getCategories called");
         let categories = [];
