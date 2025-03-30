@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Button, Error, Input, Loading, Select } from "../";
@@ -21,10 +21,15 @@ function TransactionForm({ transaction, transacationType }) {
   const [subcategories, setSubcategories] = useState([]);
   const [paymentMode, setPaymentMode] = useState([]);
 
+  const userId=useSelector((state) => state.auth.userData.$id);
   const { register, handleSubmit, watch, setValue, reset } = useForm({
     defaultValues: {
       amount: transaction ? transaction.amount : "",
-      type: transaction ? transaction.type : transacationType ? transacationType : "",
+      type: transaction
+        ? transaction.type
+        : transacationType
+          ? transacationType
+          : "",
       status: transaction ? transaction.status : "",
       description: transaction ? transaction.description : "",
       paymentModeId: transaction ? transaction.paymentModeId : "",
@@ -35,6 +40,17 @@ function TransactionForm({ transaction, transacationType }) {
   });
 
   const amount = watch("amount");
+  const type = watch("type");
+  const categoryId = watch("categoryId");
+  useEffect(() => {
+    if (!type || !categoryId) return;
+    if (type === "Income") {
+      setValue(
+        "categoryId",
+        categories.find((category) => category.name === "Income").$id
+      );
+    }
+  }, [type, categoryId]);
 
   useEffect(() => {
     console.log("amount changed", amount);
@@ -43,8 +59,6 @@ function TransactionForm({ transaction, transacationType }) {
       setValue("amount", 0);
     }
   }, [amount]);
-
-  const categoryId = watch("categoryId");
 
   useEffect(() => {
     console.log("categoryId changed", categoryId);
@@ -93,7 +107,7 @@ function TransactionForm({ transaction, transacationType }) {
   const createTransaction = async (data) => {
     console.log("createTransaction called");
     await transactionService
-      .createTrasanction(data)
+      .createTrasanction(data,userId)
       .then((response) => {
         console.log("createTransaction response");
         console.log(response);
@@ -125,7 +139,9 @@ function TransactionForm({ transaction, transacationType }) {
   return (
     <div className=" p-8 min-h-screen flex items-center justify-center bg-light-gray">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold text-dark-blue mb-6">Transaction Form</h2>
+        <h2 className="text-2xl font-bold text-dark-blue mb-6">
+          Transaction Form
+        </h2>
         <form onSubmit={handleSubmit(createTransaction)}>
           <Select
             {...register("type", { required: true })}
@@ -162,7 +178,10 @@ function TransactionForm({ transaction, transacationType }) {
             label="Date"
           />
 
-          <label className="inline-block mb-1 pl-1 text-dark-blue font-semibold" htmlFor={"categoryId"}>
+          <label
+            className="inline-block mb-1 pl-1 text-dark-blue font-semibold"
+            htmlFor={"categoryId"}
+          >
             {"Category"}
           </label>
           <select
@@ -178,7 +197,10 @@ function TransactionForm({ transaction, transacationType }) {
               ))}
           </select>
 
-          <label className="inline-block mb-1 pl-1 text-dark-blue font-semibold" htmlFor={"subcategoryId"}>
+          <label
+            className="inline-block mb-1 pl-1 text-dark-blue font-semibold"
+            htmlFor={"subcategoryId"}
+          >
             {"SubCategory"}
           </label>
           <select
@@ -196,7 +218,10 @@ function TransactionForm({ transaction, transacationType }) {
               )}
           </select>
 
-          <label className="inline-block mb-1 pl-1 text-dark-blue font-semibold" htmlFor={"paymentModeId"}>
+          <label
+            className="inline-block mb-1 pl-1 text-dark-blue font-semibold"
+            htmlFor={"paymentModeId"}
+          >
             {"Payment Mode"}
           </label>
           <select

@@ -5,7 +5,7 @@ import App from "./App.jsx";
 import { Provider } from "react-redux";
 import store from "./store/store.js";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { SignUp, Login, Home, AddExpense, AddIncome,AddCategory,AddSubCategory } from "./pages";
+import { SignUp, Login, Home, AddExpense, AddIncome,AddCategory,AddSubCategory,AddPaymentMode,AllExpense } from "./pages";
 import {AuthLayout} from "./components"
 
 const router = createBrowserRouter([
@@ -50,15 +50,36 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: "/paymentmode",
+        element: (
+          // <AuthLayout>
+            <AddPaymentMode />
+          // </AuthLayout>
+        ),
+      },
+      {
         path: "transaction",
         children: [
           {
             path: "expense",
-            element:(
-              <AuthLayout>
-                <AddExpense />
-                </AuthLayout>
-            ),
+            children:[
+              {
+                path: "",
+                element: (
+                  <AuthLayout>
+                    <AddExpense />
+                  </AuthLayout>
+                ),
+              },
+              {
+                path: "all",
+                element: (
+                  <AuthLayout>
+                    <AllExpense />
+                  </AuthLayout>
+                ),
+              }
+            ]
           },
           {
             path: "income",
@@ -74,9 +95,9 @@ const router = createBrowserRouter([
   },
 ]);
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
+  // <StrictMode>
     <Provider store={store}>
       <RouterProvider router={router} />
     </Provider>
-  </StrictMode>
+  // {/* </StrictMode> */}
 );

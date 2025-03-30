@@ -1,5 +1,5 @@
 import config from "../conf/config";
-import { Client, Databases } from "appwrite";
+import { Client, Databases,ID } from "appwrite";
 
 export class PaymentServices {
   client = new Client();
@@ -10,6 +10,25 @@ export class PaymentServices {
 
     this.database = new Databases(this.client);
     console.log("PaymentServices initialized");
+  }
+  async AddPaymentMode({paymentMode:name}){
+    console.log("AddPaymentMode called");
+    
+    try {
+        const response = await this.database.createDocument(
+          config.appwriteDatabaseId,
+          config.appwriteCollection.paymentModes,
+          ID.unique(),
+          {
+            name: name,
+          }
+        );
+        console.log("Payment mode added successfully");
+        console.log(response);
+        return response;
+    } catch (error) {
+      console.log(error);
+    }
   }
   async getAllPaymentModes() {
     console.log("getAllPaymentModes called");

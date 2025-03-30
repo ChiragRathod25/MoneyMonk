@@ -11,6 +11,8 @@ import TransactionForm from "./Form/TransactionForm"
 import AuthLayout from "./AuthLayout"
 import CategoryForm from "./Form/Category/CategoryForm"
 import SubCategoryForm from "./Form/SubCategory/SubCategoryForm"
+import PaymentModeForm from "./Form/PaymentMode/PaymentModeForm"
+import TransactionCard from "./Transaction/TransactionCard"
 export{
     Loading,
     Error,
@@ -24,6 +26,9 @@ export{
     TransactionForm,
     AuthLayout,
     CategoryForm,
-    SubCategoryForm
+    SubCategoryForm,
+    PaymentModeForm,
+    TransactionCard
+    
     
 }

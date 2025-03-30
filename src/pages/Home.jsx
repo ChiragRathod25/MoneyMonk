@@ -43,6 +43,20 @@ function Home() {
               Add Income
             </Button>
           </Link>
+          <Link
+            to="transaction/expense/all"
+            className="bg-yellow-500 hover:bg-yellow-600 text-white py-3 px-6 rounded-lg shadow-md"
+          >
+            View All Expenses
+          </Link>
+          <Link 
+
+            to="transaction/income/all"
+            className="bg-blue-500 hover:bg-blue-600 text-white py-3 px-6 rounded-lg shadow-md"
+          >
+            View All Income
+          </Link>
+
         </div>
       </section>
 

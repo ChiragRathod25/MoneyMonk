@@ -3,8 +3,10 @@ import Login from "./Login";
 import Home from "./Home";
 import AddIncome from "./Income/AddIncome"
 import AddExpense from "./Expense/AddExpense"
+import AllExpense from "./Expense/AllExpense"
 import AddCategory from "./Category/AddCategory"
 import AddSubCategory from "./SubCategory/AddSubcategory"
+import AddPaymentMode from "./PaymentMode/AddPaymentMode";
 
 
 
@@ -15,7 +17,9 @@ export {
     AddIncome,
     AddExpense,
     AddCategory,
-    AddSubCategory
+    AddSubCategory,
+    AddPaymentMode,
+    AllExpense,
 
     
 
