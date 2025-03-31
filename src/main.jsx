@@ -5,7 +5,7 @@ import App from "./App.jsx";
 import { Provider } from "react-redux";
 import store from "./store/store.js";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { SignUp, Login, Home, AddExpense, AddIncome,AddCategory,AddSubCategory,AddPaymentMode,AllExpense,AllIncome } from "./pages";
+import { SignUp, Login, Home, AddExpense, AddIncome,AddCategory,AddSubCategory,AddPaymentMode,AllExpense,AllIncome, ExpenseReport } from "./pages";
 import {AuthLayout} from "./components"
 
 const router = createBrowserRouter([
@@ -64,7 +64,15 @@ const router = createBrowserRouter([
             path: "expense",
             children:[
               {
-                path: "",
+                path:"",
+                element:(
+                  <AuthLayout>
+                    <ExpenseReport />
+                  </AuthLayout>
+                )
+              },
+              {
+                path: "add",
                 element: (
                   <AuthLayout>
                     <AddExpense />
@@ -85,7 +93,7 @@ const router = createBrowserRouter([
             path: "income",
             children:[
               {
-                path: "",
+                path: "add",
                 element:(
                   <AuthLayout>
                     <AddIncome />

@@ -13,6 +13,8 @@ import CategoryForm from "./Form/Category/CategoryForm"
 import SubCategoryForm from "./Form/SubCategory/SubCategoryForm"
 import PaymentModeForm from "./Form/PaymentMode/PaymentModeForm"
 import TransactionCard from "./Transaction/TransactionCard"
+
+import ExpenseCategoryPieChart from "./Graphs/ExpenseCategoryPieChart"
 export{
     Loading,
     Error,
@@ -28,7 +30,8 @@ export{
     CategoryForm,
     SubCategoryForm,
     PaymentModeForm,
-    TransactionCard
+    TransactionCard,
+    ExpenseCategoryPieChart
     
     
 }

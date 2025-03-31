@@ -10,6 +10,9 @@ import AddPaymentMode from "./PaymentMode/AddPaymentMode";
 import AllIncome from "./Income/AllIncome";
 
 
+import ExpenseReport from "./Expense/Report";
+
+
 
 export {
     SignUp,
@@ -21,7 +24,8 @@ export {
     AddSubCategory,
     AddPaymentMode,
     AllExpense,
-    AllIncome
+    AllIncome,
+    ExpenseReport,
 
     
 
