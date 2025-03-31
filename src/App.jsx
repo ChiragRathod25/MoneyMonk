@@ -1089,8 +1089,7 @@ function App() {
 
         // select any one categoryId from the list
         const categoryIds = Object.keys(list);
-        const categoryId =
-          categoryIds[Math.floor(Math.random() * categoryIds.length)];
+        const categoryId= categoryIds[Math.floor(Math.random() * categoryIds.length)];
         console.log("Selected categoryId", categoryId);
         const availableSubCategory = list[categoryId];
         console.log("availableSubCategory", availableSubCategory);
@@ -1123,7 +1122,7 @@ function App() {
           });
       }
     };
-    createTransactions(5);
+    createTransactions(25);
   };
 
   useEffect(() => {

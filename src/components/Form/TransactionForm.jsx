@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch,useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Button, Error, Input, Loading, Select } from "../";
@@ -21,7 +21,7 @@ function TransactionForm({ transaction, transacationType }) {
   const [subcategories, setSubcategories] = useState([]);
   const [paymentMode, setPaymentMode] = useState([]);
 
-  const userId=useSelector((state) => state.auth.userData.$id);
+  const userId = useSelector((state) => state.auth.userData.$id);
   const { register, handleSubmit, watch, setValue, reset } = useForm({
     defaultValues: {
       amount: transaction ? transaction.amount : "",
@@ -72,7 +72,24 @@ function TransactionForm({ transaction, transacationType }) {
       .then((response) => {
         console.log("getAllCategories response");
         console.log(response);
-        setCategories(response.documents);
+        setCategories(response.documents)
+        return response;
+      }).then((response)=>{
+
+          // if type=='Income' set categoryId to Income category
+          console.log("Categories", response);
+          if (transacationType === "Income") {
+            setValue(
+              "categoryId",
+              response.documents.find((category) => category.name === "Income").$id
+            );
+          }else{
+            setValue(
+              "categoryId",
+              response.documents[0].$id
+            )
+          }
+
       })
       .catch((error) => {
         console.log(error);
@@ -107,7 +124,7 @@ function TransactionForm({ transaction, transacationType }) {
   const createTransaction = async (data) => {
     console.log("createTransaction called");
     await transactionService
-      .createTrasanction(data,userId)
+      .createTrasanction(data, userId)
       .then((response) => {
         console.log("createTransaction response");
         console.log(response);

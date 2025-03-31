@@ -3,7 +3,7 @@ import transactionService from "../../appwrite/transactionServices";
 import { TransactionCard } from "../../components";
 import { useSelector } from "react-redux";
 
-const AllExpense = () => {
+const AllIncome = () => {
   const [transactions, setTransactions] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
   const userId = useSelector((state) => state?.auth?.userData?.$id);
@@ -28,9 +28,9 @@ const AllExpense = () => {
   }
   return (
     <div>
-      <h1>All Expense</h1>
+      <h1>All Income</h1>
       {transactions.map((transaction) =>
-        transaction?.type === "Expense" ? (
+        transaction?.type === "Income" ? (
           <TransactionCard key={transaction.$id} transaction={transaction} />
         ) : null
       )}
@@ -38,4 +38,4 @@ const AllExpense = () => {
   );
 };
 
-export default AllExpense;
+export default AllIncome;

@@ -7,6 +7,7 @@ import AllExpense from "./Expense/AllExpense"
 import AddCategory from "./Category/AddCategory"
 import AddSubCategory from "./SubCategory/AddSubcategory"
 import AddPaymentMode from "./PaymentMode/AddPaymentMode";
+import AllIncome from "./Income/AllIncome";
 
 
 
@@ -20,6 +21,7 @@ export {
     AddSubCategory,
     AddPaymentMode,
     AllExpense,
+    AllIncome
 
     
 
