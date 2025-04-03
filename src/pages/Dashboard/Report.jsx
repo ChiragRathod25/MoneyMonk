@@ -1,15 +1,18 @@
 import React from 'react'
 import { ExpenseCategoryPieChart, IncomeExpenseLineChart, IncomeSubCategoryPieChart } from '../../components'
 
-function CategoryPieChart() {
+
+function Report() {
   return (
     <>
-    <div>CategoryPieChart</div>
-    {/* <ExpenseCategoryPieChart /> */}
-    {/* <IncomeSubCategoryPieChart/> */}
+    
+    <div>Report</div>
+
+    <ExpenseCategoryPieChart/>
+    <IncomeSubCategoryPieChart/>
     <IncomeExpenseLineChart/>
     </>
   )
 }
 
-export default CategoryPieChart
+export default Report

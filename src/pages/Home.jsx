@@ -33,12 +33,12 @@ function Home() {
           Take full control of your expenses and savings effortlessly.
         </p>
         <div className="mt-6 flex justify-center gap-4">
-          <Link to="transaction/expense">
+          <Link to="transaction/expense/add">
             <Button className="bg-red-500 hover:bg-red-600 text-white py-3 px-6 rounded-lg shadow-md">
               Add Expense
             </Button>
           </Link>
-          <Link to="transaction/income">
+          <Link to="transaction/income/add">
             <Button className="bg-green-500 hover:bg-green-600 text-white py-3 px-6 rounded-lg shadow-md">
               Add Income
             </Button>
@@ -55,6 +55,15 @@ function Home() {
             className="bg-blue-500 hover:bg-blue-600 text-white py-3 px-6 rounded-lg shadow-md"
           >
             View All Income
+          </Link>
+          <Link 
+
+            to="reports"
+            className="
+            bg-purple-500 hover:bg-purple-600 text-white py-3 px-6 rounded-lg shadow-md"
+            
+          >
+            Reports
           </Link>
 
         </div>
@@ -138,7 +147,7 @@ function Home() {
               <span className="text-red-500 font-bold">- ₹500</span>
             </li>
           </ul>
-          <Link to="/transactions" className="text-teal-500 hover:underline mt-4 block text-right">
+          <Link to="/transaction" className="text-teal-500 hover:underline mt-4 block text-right">
             View All Transactions →
           </Link>
         </div>

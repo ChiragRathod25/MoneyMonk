@@ -11,7 +11,7 @@ const AllIncome = () => {
   useEffect(() => {
     setLoading(true);
     transactionService
-      .getUserTransactions({ userId })
+      .getUserIncomeTransactions({ userId })
       .then((response) => {
         console.log(response.documents);
         setTransactions(response.documents);

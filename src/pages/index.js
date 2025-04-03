@@ -8,9 +8,9 @@ import AddCategory from "./Category/AddCategory"
 import AddSubCategory from "./SubCategory/AddSubcategory"
 import AddPaymentMode from "./PaymentMode/AddPaymentMode";
 import AllIncome from "./Income/AllIncome";
+import AllTransactions from "./Dashboard/AllTransactions";
 
-
-import ExpenseReport from "./Expense/Report";
+import Report from "./Dashboard/Report";
 
 
 
@@ -25,7 +25,8 @@ export {
     AddPaymentMode,
     AllExpense,
     AllIncome,
-    ExpenseReport,
+    AllTransactions,
+    Report,
 
     
 
