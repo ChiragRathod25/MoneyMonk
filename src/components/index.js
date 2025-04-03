@@ -15,6 +15,9 @@ import PaymentModeForm from "./Form/PaymentMode/PaymentModeForm"
 import TransactionCard from "./Transaction/TransactionCard"
 
 import ExpenseCategoryPieChart from "./Graphs/ExpenseCategoryPieChart"
+import IncomeSubCategoryPieChart from "./Graphs/IncomeSubCategoryPieChart"
+import IncomeExpenseLineChart from "./Graphs/IncomeExpenseLineChart"
+
 export{
     Loading,
     Error,
@@ -31,7 +34,10 @@ export{
     SubCategoryForm,
     PaymentModeForm,
     TransactionCard,
-    ExpenseCategoryPieChart
+    ExpenseCategoryPieChart,
+    IncomeSubCategoryPieChart,
+    IncomeExpenseLineChart,
+    
     
     
 }

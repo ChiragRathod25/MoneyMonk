@@ -33,9 +33,35 @@ export class TransactionServices {
       config.appwriteDatabaseId,
       config.appwriteCollection.transactions,
       [
+        Query.limit(500),
+        Query.orderDesc("$createdAt"),
+        Query.equal("userId", userId),
+      ]
+    );
+  }
+  async getUserExpenseTransactions({ userId }) {
+    console.log("getUserExpenseTransactions called");
+    return this.database.listDocuments(
+      config.appwriteDatabaseId,
+      config.appwriteCollection.transactions,
+      [
         Query.limit(50),
         Query.orderDesc("$createdAt"),
         Query.equal("userId", userId),
+        Query.equal("type", "Expense"),
+      ]
+    );
+  }
+  async getUserIncomeTransactions({ userId }) {
+    console.log("getUserIncomeTransactions called");
+    return this.database.listDocuments(
+      config.appwriteDatabaseId,
+      config.appwriteCollection.transactions,
+      [
+        Query.limit(50),
+        Query.orderDesc("$createdAt"),
+        Query.equal("userId", userId),
+        Query.equal("type", "Income"),
       ]
     );
   }

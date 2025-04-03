@@ -3,29 +3,28 @@ import transactionService from "../../appwrite/transactionServices";
 import Chart from "chart.js/auto";
 import { useSelector } from "react-redux";
 
-function ExpenseCategoryPieChart() {
+const IncomeSubCategoryPieChart = () => {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(null);
   const [transactions, setTransactions] = React.useState([]);
   const userId = useSelector((state) => state?.auth?.userData?.$id);
-  const [Data, setData] = React.useState([]);
 
   useEffect(() => {
     setLoading(true);
     transactionService
-      .getUserExpenseTransactions({ userId })
+      .getUserIncomeTransactions({ userId })
       .then((response) => {
-        console.log(response.documents);
+        console.log("response.documents", response.documents);
         setTransactions(response.documents);
         return response.documents;
       })
       .then((data) => {
         const category = {};
         for (const cat of data) {
-          if (!category[cat.categoryId.name]) {
-            category[cat.categoryId.name] = cat.amount;
+          if (!category[cat.subcategoryId.name]) {
+            category[cat.subcategoryId.name] = cat.amount;
           } else {
-            category[cat.categoryId.name] += cat.amount;
+            category[cat.subcategoryId.name] += cat.amount;
           }
         }
 
@@ -37,29 +36,23 @@ function ExpenseCategoryPieChart() {
         console.log("categoryArray", categoryArray);
         return categoryArray;
       })
-      .then((data) => {
-        setData(data);
-        console.log("Data", data);
-        return data;
-      })
       .then((Data) => {
-        const expensePieChart = async function () {
-          const data = Data;
-
-          new Chart(document.getElementById("acquisitions"), {
+        console.log("Data", Data);
+        const incomePieChart = async function () {
+          new Chart(document.getElementById("incomeSubCategoryPieChart"), {
             type: "pie",
             data: {
-              labels: data.map((row) => row.name),
+              labels: Data.map((row) => row.name),
               datasets: [
                 {
-                  label: "Acquisitions by year",
-                  data: data.map((row) => row.amount),
+                  label: "Income by Sub-Category",
+                  data: Data.map((row) => row.amount),
                 },
               ],
             },
           });
         };
-        expensePieChart();
+        incomePieChart();
       })
       .catch((error) => {
         console.log(error);
@@ -68,21 +61,17 @@ function ExpenseCategoryPieChart() {
       .finally(() => {
         setLoading(false);
       });
-  }, []);
-
+  }, [userId]);
   // if (loading) {
   //   return <div>Loading...</div>;
   // }
   if (error) {
     return <div>Error: {error.message}</div>;
   }
-  if (!transactions) {
-    return <div>No transactions found</div>;
-  }
 
   return (
-    <>
-      <div>ExpenseCategoryPieChart</div>
+    <div>
+      <h1>Income Sub-Category Pie Chart</h1>
       <div
         className="
     flex 
@@ -96,10 +85,10 @@ function ExpenseCategoryPieChart() {
     p-4
     "
       >
-        <canvas id="acquisitions"></canvas>
+        <canvas id="incomeSubCategoryPieChart"></canvas>
       </div>
-    </>
+    </div>
   );
-}
+};
 
-export default ExpenseCategoryPieChart;
+export default IncomeSubCategoryPieChart;

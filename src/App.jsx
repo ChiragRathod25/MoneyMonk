@@ -1051,6 +1051,7 @@ function App() {
 
     let list = {};
     for (const cat of data) {
+      if(cat.categoryId.name==="Income") continue;
       const category = cat.categoryId.$id;
       const subCategory = cat.$id;
       if (!list[category]) {
@@ -1090,6 +1091,7 @@ function App() {
         // select any one categoryId from the list
         const categoryIds = Object.keys(list);
         const categoryId= categoryIds[Math.floor(Math.random() * categoryIds.length)];
+
         console.log("Selected categoryId", categoryId);
         const availableSubCategory = list[categoryId];
         console.log("availableSubCategory", availableSubCategory);
