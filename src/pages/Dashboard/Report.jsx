@@ -1,16 +1,19 @@
 import React from 'react'
-import { ExpenseCategoryPieChart, IncomeExpenseLineChart, IncomeSubCategoryPieChart } from '../../components'
+import { ExpenseCategoryPieChart,  IncomeSubCategoryPieChart,PaymentModeDistributionBarChart,IncomeLineGraph,ExpenseLineGraph} from '../../components'
 
 
 function Report() {
+
   return (
     <>
     
     <div>Report</div>
 
-    <ExpenseCategoryPieChart/>
-    <IncomeSubCategoryPieChart/>
-    <IncomeExpenseLineChart/>
+    {/* <ExpenseCategoryPieChart/> */}
+    {/* <IncomeSubCategoryPieChart/> */}
+    {/* <PaymentModeDistributionBarChart/> */}
+    <IncomeLineGraph/>
+    <ExpenseLineGraph/>
     </>
   )
 }

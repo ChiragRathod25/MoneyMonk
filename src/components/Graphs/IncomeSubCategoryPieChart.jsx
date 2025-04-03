@@ -23,7 +23,7 @@ const IncomeSubCategoryPieChart = () => {
         for (const cat of data) {
           if (!category[cat.subcategoryId.name]) {
             category[cat.subcategoryId.name] = cat.amount;
-          } else {
+          } else {  
             category[cat.subcategoryId.name] += cat.amount;
           }
         }
@@ -69,6 +69,10 @@ const IncomeSubCategoryPieChart = () => {
     return <div>Error: {error.message}</div>;
   }
 
+  if(!transactions.length){
+    return <div>No transactions found</div>;
+  }
+  
   return (
     <div>
       <h1>Income Sub-Category Pie Chart</h1>

@@ -16,7 +16,9 @@ import TransactionCard from "./Transaction/TransactionCard"
 
 import ExpenseCategoryPieChart from "./Graphs/ExpenseCategoryPieChart"
 import IncomeSubCategoryPieChart from "./Graphs/IncomeSubCategoryPieChart"
-import IncomeExpenseLineChart from "./Graphs/IncomeExpenseLineChart"
+import PaymentModeDistributionBarChart from "./Graphs/PaymentModeDistributionBarChart"
+import IncomeLineGraph from "./Graphs/IncomeLineGraph"
+import ExpenseLineGraph from "./Graphs/ExpenseLineGraph"
 
 export{
     Loading,
@@ -36,8 +38,8 @@ export{
     TransactionCard,
     ExpenseCategoryPieChart,
     IncomeSubCategoryPieChart,
-    IncomeExpenseLineChart,
-    
-    
+    PaymentModeDistributionBarChart,
+    IncomeLineGraph,
+    ExpenseLineGraph,
     
 }
