@@ -11,9 +11,9 @@ function Report() {
 
     {/* <ExpenseCategoryPieChart/> */}
     {/* <IncomeSubCategoryPieChart/> */}
-    {/* <PaymentModeDistributionBarChart/> */}
-    <IncomeLineGraph/>
-    <ExpenseLineGraph/>
+    <PaymentModeDistributionBarChart/>
+    {/* <IncomeLineGraph/> */}
+    {/* <ExpenseLineGraph/> */}
     </>
   )
 }

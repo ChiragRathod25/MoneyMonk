@@ -1,88 +1,143 @@
-import React, { useEffect } from 'react'
-import transactionService from '../../appwrite/transactionServices';
-import Chart from 'chart.js/auto';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from "react";
+import transactionService from "../../appwrite/transactionServices";
+import Chart from "chart.js/auto";
+import { useSelector } from "react-redux";
+import { Select } from "../index";
 
 function IncomeLineGraph() {
-    const [error, setError] = React.useState(null);
-    const [loading, setLoading] = React.useState(false);
-    const userId = useSelector((state) => state?.auth?.userData?.$id);
-    const [transactions, setTransactions] = React.useState([]);
+  const [error, setError] = React.useState(null);
+  const [loading, setLoading] = React.useState(false);
+  const userId = useSelector((state) => state?.auth?.userData?.$id);
+  const [transactions, setTransactions] = React.useState([]);
 
-    useEffect(()=>{
-        transactionService.getUserIncomeTransactions({userId})
-        .then((response)=>{
-            console.log("response.documents", response.documents);
-            setTransactions(response.documents);
-            return response.documents;
-        })
-        .then((data)=>{
-            // get the month from the date and amount
-            const sortedData = data.sort((a, b) => new Date(a.date) - new Date(b.date));
-            
-            const month = sortedData.map((row) => new Date(row.date).toLocaleString('default', { month: 'long' }));
-            const amount = sortedData.map((row) => row.amount);
-            const dates= sortedData.map((row) => new Date(row.date).toLocaleDateString('en-US'));
-            const IncomeLineGraph=()=>{
-                new Chart(
-                    document.getElementById("incomeLineGraph"),
-                    {
-                        type:"line",
-                        data:{
-                            labels: dates,
-                            datasets:[
-                                {
-                                    label:"Income",
-                                    data: amount,
-                                    backgroundColor:"rgba(253, 51, 162, 0.7)",
-                                    borderColor:"rgba(253, 51, 162, 0.7)",
-                                    borderWidth:2,
-                                 
-                                }
-                            ]
-                        },
-                        options:{
-                            responsive:true,
-                            plugins:{
-                                legend:{
-                                    position:"top"
-                                },
-                                title:{
-                                    display:true,
-                                    text:"Income Line Graph"
-                                }
-                            }
-                        }
-                    }
-                )
-                
-            }
-            IncomeLineGraph()
-        })
-        .catch((error)=>{
-            console.log(error);
-            setError(error);
-        })
-        .finally(()=>{
-            setLoading(false);
-        })
-    },[userId])
-  
-     // if (loading) {
-  //   return <div>Loading...</div>;
-  // }
+  const [timePeriod, setTimePeriod] = React.useState([
+    "Last 7 Days",
+    "Last 30 Days",
+    "Last 60 Days",
+    "Last 90 Days",
+    "Last 1 Year",
+    "Last 2 Years",
+    "All Time",
+  ]);
+  const [selectedTimePeriod, setSelectedTimePeriod] =
+    React.useState("Last 7 Days");
+
+  const IncomeLineGraph = (labels, data) => {
+    // destroy the previous chart if it exists
+    const existingChart = Chart.getChart("incomeLineGraph");
+    if (existingChart) {
+      existingChart.destroy();
+    }
+
+    new Chart(document.getElementById("incomeLineGraph"), {
+      type: "line",
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: "Income",
+            data: data,
+            backgroundColor: "rgba(253, 51, 162, 0.7)",
+            borderColor: "rgba(253, 51, 162, 0.7)",
+            borderWidth: 2,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: "top",
+          },
+          title: {
+            display: true,
+            text: "Income Line Graph",
+          },
+        },
+      },
+    });
+  };
+
+  const handleTimePeriodChange = () => {
+    const e = selectedTimePeriod;
+    const currentDate = new Date();
+    let startDate = new Date();
+    switch (e) {
+      case "Last 7 Days":
+        startDate.setDate(currentDate.getDate() - 7);
+        break;
+      case "Last 30 Days":
+        startDate.setDate(currentDate.getDate() - 30);
+        break;
+      case "Last 60 Days":
+        startDate.setDate(currentDate.getDate() - 60);
+        break;
+      case "Last 90 Days":
+        startDate.setDate(currentDate.getDate() - 90);
+        break;
+      case "Last 1 Year":
+        startDate.setFullYear(currentDate.getFullYear() - 1);
+        break;
+      case "Last 2 Years":
+        startDate.setFullYear(currentDate.getFullYear() - 2);
+        break;
+      case "All Time":
+        startDate = null;
+        break;
+      default:
+        break;
+    }
+    console.log("start date", startDate, currentDate);
+    const filteredData = transactions.filter((transaction) => {
+      const transactionDate = new Date(transaction.date);
+      return (
+        (startDate ? transactionDate >= startDate : true) &&
+        transactionDate <= currentDate
+      );
+    });
+    console.log("Filtered Data", filteredData);
+    const dates = filteredData.map((row) =>
+      new Date(row.date).toLocaleDateString("en-US")
+    );
+    const amount = filteredData.map((row) => row.amount);
+    IncomeLineGraph(dates, amount);
+  };
+
+  useEffect(() => {
+    handleTimePeriodChange();
+  }, [transactions, selectedTimePeriod]);
+
+  useEffect(() => {
+    setLoading(true);
+    transactionService
+      .getUserIncomeTransactions({ userId })
+      .then((response) => {
+        console.log("response.documents", response.documents);
+        setTransactions(response.documents);
+        return response.documents;
+      })
+      .catch((error) => {
+        console.log(error);
+        setError(error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [userId]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
   if (error) {
     return <div>Error: {error.message}</div>;
   }
 
   return (
     <div>
-      <h1>
-        Income Line Graph
-      </h1>
+      <h1>Income Line Graph</h1>
       <div
         className="
-    flex 
+    flex-col
     justify-center
     items-center
     w-[500px]
@@ -93,10 +148,19 @@ function IncomeLineGraph() {
     p-4
     "
       >
+        <Select
+          options={timePeriod}
+          className="w-full"
+          label="Select Time Period"
+          selectedOption={selectedTimePeriod}
+          onChange={(e) => {
+            setSelectedTimePeriod(() => e.target.value);
+          }}
+        />
         <canvas id="incomeLineGraph"></canvas>
       </div>
     </div>
   );
 }
 
-export default IncomeLineGraph
+export default IncomeLineGraph;

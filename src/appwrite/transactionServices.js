@@ -45,7 +45,7 @@ export class TransactionServices {
       config.appwriteDatabaseId,
       config.appwriteCollection.transactions,
       [
-        Query.limit(50),
+        Query.limit(500),
         Query.orderDesc("$createdAt"),
         Query.equal("userId", userId),
         Query.equal("type", "Expense"),

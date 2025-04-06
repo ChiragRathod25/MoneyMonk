@@ -1051,7 +1051,7 @@ function App() {
 
     let list = {};
     for (const cat of data) {
-      if(cat.categoryId.name==="Income") continue;
+      // if(cat.categoryId.name==="Income") continue;
       const category = cat.categoryId.$id;
       const subCategory = cat.$id;
       if (!list[category]) {
@@ -1074,25 +1074,26 @@ function App() {
       for (let i = 0; i < n; i++) {
         // select random amount between 1000 to 10000
         const amount = Math.floor(Math.random() * (10000 - 1000 + 1)) + 1000;
-        const type = "Expense"; // or "Income"
+        const type = "Income"; // or "Income"
         const status =
           availableStatus[Math.floor(Math.random() * availableStatus.length)];
-        const description = "Transaction description";
+        const description = "Income Transaction description";
 
-        // select random date between 2025-01-01 and 2025-12-31
+        // select random date from last 7 days
+        const today = new Date();
+        const last7Days = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
         const date = new Date(
-          2025,
-          Math.floor(Math.random() * 12),
-          Math.floor(Math.random() * 31)
-        )
-          .toISOString()
-          .split("T")[0];
+          last7Days.getTime() + Math.random() * (today.getTime() - last7Days.getTime())
+        ).toISOString().split("T")[0]; // format YYYY-MM-DD
 
         // select any one categoryId from the list
         const categoryIds = Object.keys(list);
+        
         const categoryId= categoryIds[Math.floor(Math.random() * categoryIds.length)];
-
+        if(categoryId!=="67e861f10011bae4b858") continue; // only income categoryId
+        
         console.log("Selected categoryId", categoryId);
+
         const availableSubCategory = list[categoryId];
         console.log("availableSubCategory", availableSubCategory);
         const subCategoryId =
