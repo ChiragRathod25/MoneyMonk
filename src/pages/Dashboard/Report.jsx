@@ -15,7 +15,7 @@ function Report() {
       <div>Report</div>
 
       {/* <ExpenseCategoryPieChart/> */}
-      <ExpenseCategoryToSubCategoryPieChart/>
+      {/* <ExpenseCategoryToSubCategoryPieChart/> */}
       {/* <IncomeSubCategoryPieChart/> */}
       {/* <PaymentModeDistributionBarChart/> */}
       {/* <IncomeLineGraph/> */}
