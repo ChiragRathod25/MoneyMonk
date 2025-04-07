@@ -1,14 +1,17 @@
-import React, { useEffect } from "react";
-import transactionService from "../../appwrite/transactionServices";
+import React, { useEffect, useRef } from "react";
 import Chart from "chart.js/auto";
 import { useSelector } from "react-redux";
-import {Select} from "../index";
+import { Select, TransactionTable } from "../index";
+import transactionService from "../../appwrite/transactionServices";
 
 function PaymentModeDistributionBarChart() {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(null);
   const [transactions, setTransactions] = React.useState([]);
+  const [filteredTransactions, setFilteredTransactions] = React.useState([]);
   const userId = useSelector((state) => state?.auth?.userData?.$id);
+  const canvasRef = useRef(null);
+  const chartRef = useRef(null);
 
   const [timePeriod, setTimePeriod] = React.useState([
     "Last 7 Days",
@@ -24,13 +27,15 @@ function PaymentModeDistributionBarChart() {
 
   const PaymentModeBarChart = function (data) {
     // destroy the previous chart if it exists
-    const existingChart = Chart.getChart("PaymentModeDistributionBarChartId");
-    if (existingChart) {
-      existingChart.destroy();
+    if (chartRef.current) {
+      chartRef.current.destroy();
+    }
+    if (!canvasRef.current) {
+      return;
     }
 
     // create a new chart
-    new Chart(document.getElementById("PaymentModeDistributionBarChartId"), {
+    chartRef.current = new Chart(canvasRef.current, {
       type: "bar",
       data: {
         labels: data.map((row) => row.name),
@@ -95,6 +100,7 @@ function PaymentModeDistributionBarChart() {
       );
     });
     console.log("Filtered Data", filteredData);
+    setFilteredTransactions(filteredData);
     const category = {};
     for (const cat of filteredData) {
       if (!category[cat.paymentModeId.name]) {
@@ -109,18 +115,20 @@ function PaymentModeDistributionBarChart() {
       name: key,
       amount: value,
     }));
+
     console.log("Filtered Data", filteredData);
     console.log("category", category);
     console.log("paymentModeArray", paymentModeArray);
     PaymentModeBarChart(paymentModeArray);
   };
 
-   useEffect(() => {
-     handleTimePeriodChange();
-   }, [transactions, selectedTimePeriod]);
+  useEffect(() => {
+    handleTimePeriodChange();
+  }, [transactions, selectedTimePeriod]);
 
   useEffect(() => {
     setLoading(true);
+
     transactionService
       .getUserTransactions({ userId })
       .then((response) => {
@@ -154,7 +162,7 @@ function PaymentModeDistributionBarChart() {
       flex-col
       justify-center
       items-center
-      w-[500px]
+      w-full
       h-full
       bg-white
       rounded-lg
@@ -165,13 +173,13 @@ function PaymentModeDistributionBarChart() {
         <Select
           options={timePeriod}
           selectedOption={selectedTimePeriod}
-          setSelectedOption={setSelectedTimePeriod}
           label="Select Time Period"
           onChange={(e) => {
             setSelectedTimePeriod(e.target.value);
           }}
         />
-        <canvas id="PaymentModeDistributionBarChartId"></canvas>
+        <canvas ref={canvasRef}></canvas>
+        <TransactionTable transactions={filteredTransactions} />
       </div>
     </div>
   );

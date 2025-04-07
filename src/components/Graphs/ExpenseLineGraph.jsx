@@ -1,14 +1,17 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import Chart from "chart.js/auto";
 import transactionService from "../../appwrite/transactionServices";
-import {Select} from "../index";
+import { Select, TransactionTable } from "../index";
 
 function ExpenseLineGraph() {
   const [error, setError] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
   const userId = useSelector((state) => state?.auth?.userData?.$id);
   const [transactions, setTransactions] = React.useState([]);
+  const [filteredTransactions, setFilteredTransactions] = useState([]);
+  const canvasRef = useRef(null);
+  const chartRef = useRef(null);
   const [timePeriod, setTimePeriod] = React.useState([
     "Last 7 Days",
     "Last 30 Days",
@@ -23,13 +26,15 @@ function ExpenseLineGraph() {
 
   const ExpenseLineGraph = (labels, data) => {
     // destroy the previous chart if it exists`
-    const existingChart = Chart.getChart("expenseLineGraph");
-    if (existingChart) {
-      existingChart.destroy();
+    if (chartRef.current) {
+      chartRef.current.destroy();
+    }
+    if (!canvasRef.current) {
+      return;
     }
 
     // create a new chart
-    new Chart(document.getElementById("expenseLineGraph"), {
+    chartRef.current = new Chart(canvasRef.current, {
       type: "line",
       data: {
         labels: labels,
@@ -88,14 +93,18 @@ function ExpenseLineGraph() {
         break;
     }
     console.log("start date", startDate, currentDate);
-    const filteredData = transactions.filter((transaction) => {
+     //filterData between currentDate and startDate
+     const filteredData = transactions.filter((transaction) => { 
       const transactionDate = new Date(transaction.date);
-      return (
-        (startDate ? transactionDate >= startDate : true) &&
-        transactionDate <= currentDate
-      );
+      if (startDate) {
+        return transactionDate >= startDate && transactionDate <= currentDate;
+      } else {
+        return true;
+      }
     });
+    
     console.log("Filtered Data", filteredData);
+    setFilteredTransactions(filteredData);
     const dates = filteredData.map((row) =>
       new Date(row.date).toLocaleDateString("en-US")
     );
@@ -139,7 +148,7 @@ function ExpenseLineGraph() {
     flex-col
     justify-center
     items-center
-    w-[500px]
+    w-full
     h-full
     bg-white
     rounded-lg
@@ -157,7 +166,8 @@ function ExpenseLineGraph() {
           }}
         />
 
-        <canvas id="expenseLineGraph"></canvas>
+        <canvas ref={canvasRef}></canvas>
+        <TransactionTable transactions={filteredTransactions} />
       </div>
     </div>
   );

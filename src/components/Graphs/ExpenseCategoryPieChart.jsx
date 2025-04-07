@@ -1,14 +1,17 @@
-import React, { useDebugValue, useEffect } from "react";
+import React, { useDebugValue, useEffect, useRef } from "react";
 import transactionService from "../../appwrite/transactionServices";
 import Chart from "chart.js/auto";
 import { useSelector } from "react-redux";
-import {Select} from "../index";
+import { Select, TransactionTable } from "../index";
 
 function ExpenseCategoryPieChart() {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(null);
   const [transactions, setTransactions] = React.useState([]);
+  const [filteredTransactions, setFilteredTransactions] = React.useState([]);
   const userId = useSelector((state) => state?.auth?.userData?.$id);
+  const canvasRef = useRef(null);
+  const chartRef = useRef(null);
   const [timePeriod, setTimePeriod] = React.useState([
     "Last 7 Days",
     "Last 30 Days",
@@ -22,13 +25,17 @@ function ExpenseCategoryPieChart() {
   const [selectedTimePeriod, setSelectedTimePeriod] =
     React.useState("Last 7 Days");
 
-  const expensePieChart =  function ( data) {
-    // destroy the previous chart if it exists
-    const existingChart = Chart.getChart("acquisitions");
-    if (existingChart) {
-      existingChart.destroy();
+  const expensePieChart = function (data) {
+    // destroy the previous chart if it exist
+    if (chartRef.current) {
+      chartRef.current.destroy();
     }
-    new Chart(document.getElementById("acquisitions"), {
+    if (!canvasRef.current) {
+      return;
+    }
+
+    // create a new chart
+    chartRef.current = new Chart(canvasRef.current, {
       type: "pie",
       data: {
         labels: data.map((row) => row.name),
@@ -72,16 +79,18 @@ function ExpenseCategoryPieChart() {
         break;
     }
     console.log("start date", startDate, currentDate);
-   
-    const filteredData = transactions.filter((transaction) => {
+
+    //filterData between currentDate and startDate
+    const filteredData = transactions.filter((transaction) => { 
       const transactionDate = new Date(transaction.date);
-      if (startDate && transactionDate < startDate) {
-        return false;
+      if (startDate) {
+        return transactionDate >= startDate && transactionDate <= currentDate;
+      } else {
+        return true;
       }
-      return true;
-    }
-    );
+    });
     console.log("filteredData", filteredData);
+    setFilteredTransactions(filteredData);
     const category = {};
     for (const cat of filteredData) {
       if (!category[cat.categoryId.name]) {
@@ -99,10 +108,10 @@ function ExpenseCategoryPieChart() {
     console.log("categoryArray", categoryArray);
     expensePieChart(categoryArray);
   };
-    
-  useEffect(()=>{
+
+  useEffect(() => {
     handleTimePeriodChange();
-  },[transactions, selectedTimePeriod])
+  }, [transactions, selectedTimePeriod]);
 
   useEffect(() => {
     setLoading(true);
@@ -122,9 +131,9 @@ function ExpenseCategoryPieChart() {
       });
   }, []);
 
-  // if (loading) {
-  //   return <div>Loading...</div>;
-  // }
+  if (loading) {
+    return <div>Loading...</div>;
+  }
   if (error) {
     return <div>Error: {error.message}</div>;
   }
@@ -140,7 +149,7 @@ function ExpenseCategoryPieChart() {
     flex-col
     justify-center
     items-center
-    w-[500px]
+    w-full
     h-full
     bg-white
     rounded-lg
@@ -155,10 +164,13 @@ function ExpenseCategoryPieChart() {
           selectedOption={selectedTimePeriod}
           onChange={(e) => {
             setSelectedTimePeriod(() => e.target.value);
-      
           }}
         />
-        <canvas id="acquisitions"></canvas>
+        <canvas ref={canvasRef}></canvas>
+        <TransactionTable
+          transactions={filteredTransactions}
+          className="w-full"
+        />
       </div>
     </>
   );

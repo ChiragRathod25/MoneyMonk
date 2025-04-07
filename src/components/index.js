@@ -13,12 +13,15 @@ import CategoryForm from "./Form/Category/CategoryForm"
 import SubCategoryForm from "./Form/SubCategory/SubCategoryForm"
 import PaymentModeForm from "./Form/PaymentMode/PaymentModeForm"
 import TransactionCard from "./Transaction/TransactionCard"
+import TransactionTable from "./Transaction/TransactionTable"
 
 import ExpenseCategoryPieChart from "./Graphs/ExpenseCategoryPieChart"
+import ExpenseCategoryToSubCategoryPieChart from "./Graphs/ExpenseCategoryToSubCategoryPieChart"
 import IncomeSubCategoryPieChart from "./Graphs/IncomeSubCategoryPieChart"
 import PaymentModeDistributionBarChart from "./Graphs/PaymentModeDistributionBarChart"
 import IncomeLineGraph from "./Graphs/IncomeLineGraph"
 import ExpenseLineGraph from "./Graphs/ExpenseLineGraph"
+
 
 export{
     Loading,
@@ -37,9 +40,11 @@ export{
     PaymentModeForm,
     TransactionCard,
     ExpenseCategoryPieChart,
+    ExpenseCategoryToSubCategoryPieChart,
     IncomeSubCategoryPieChart,
     PaymentModeDistributionBarChart,
     IncomeLineGraph,
     ExpenseLineGraph,
+    TransactionTable,   
     
 }

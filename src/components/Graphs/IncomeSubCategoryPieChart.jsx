@@ -1,13 +1,16 @@
-import React, { useDebugValue, useEffect } from "react";
+import React, { useDebugValue, useEffect, useState } from "react";
 import transactionService from "../../appwrite/transactionServices";
 import Chart from "chart.js/auto";
 import { useSelector } from "react-redux";
-import { Select } from "../index";
+import { Select, TransactionTable } from "../index";
 
 const IncomeSubCategoryPieChart = () => {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(null);
   const [transactions, setTransactions] = React.useState([]);
+  const [filteredTransactions, setFilteredTransactions] = useState([]);
+  const canvasRef = React.useRef(null);
+  const chartRef = React.useRef(null);
   const userId = useSelector((state) => state?.auth?.userData?.$id);
 
   const [timePeriod, setTimePeriod] = React.useState([
@@ -24,13 +27,15 @@ const IncomeSubCategoryPieChart = () => {
 
   const incomePieChart = function (data) {
     // destroy the previous chart if it exists
-    const existingChart = Chart.getChart("incomeSubCategoryPieChart");
-    if (existingChart) {
-      existingChart.destroy();
+    if (chartRef.current) {
+      chartRef.current.destroy();
+    }
+    if (!canvasRef.current) {
+      return;
     }
 
     // create a new chart
-    new Chart(document.getElementById("incomeSubCategoryPieChart"), {
+    chartRef.current = new Chart(canvasRef.current, {
       type: "pie",
       data: {
         labels: data.map((row) => row.name),
@@ -74,15 +79,19 @@ const IncomeSubCategoryPieChart = () => {
         break;
     }
     console.log("start date", startDate, currentDate);
+
+    //filterData between currentDate and startDate
     const filteredData = transactions.filter((transaction) => {
       const transactionDate = new Date(transaction.date);
-      return (
-        (startDate ? transactionDate >= startDate : true) &&
-        transactionDate <= currentDate
-      );
+      if (startDate) {
+        return transactionDate >= startDate && transactionDate <= currentDate;
+      } else {
+        return true;
+      }
     });
 
     console.log("Filtered Data", filteredData);
+    setFilteredTransactions(filteredData);
 
     const category = {};
     for (const cat of filteredData) {
@@ -123,9 +132,9 @@ const IncomeSubCategoryPieChart = () => {
         setLoading(false);
       });
   }, [userId]);
-  // if (loading) {
-  //   return <div>Loading...</div>;
-  // }
+  if (loading) {
+    return <div>Loading...</div>;
+  }
   if (error) {
     return <div>Error: {error.message}</div>;
   }
@@ -142,7 +151,7 @@ const IncomeSubCategoryPieChart = () => {
     flex-col
     justify-center
     items-center
-    w-[500px]
+    w-full
     h-full
     bg-white
     rounded-lg
@@ -159,7 +168,8 @@ const IncomeSubCategoryPieChart = () => {
             setSelectedTimePeriod(() => e.target.value);
           }}
         />
-        <canvas id="incomeSubCategoryPieChart"></canvas>
+        <canvas ref={canvasRef}></canvas>
+        <TransactionTable transactions={filteredTransactions} />
       </div>
     </div>
   );

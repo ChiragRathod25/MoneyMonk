@@ -2,14 +2,16 @@ import React, { useEffect } from "react";
 import transactionService from "../../appwrite/transactionServices";
 import Chart from "chart.js/auto";
 import { useSelector } from "react-redux";
-import { Select } from "../index";
+import { Select, TransactionTable } from "../index";
 
 function IncomeLineGraph() {
   const [error, setError] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
   const userId = useSelector((state) => state?.auth?.userData?.$id);
   const [transactions, setTransactions] = React.useState([]);
-
+  const [filteredTransactions, setFilteredTransactions] = React.useState([]);
+  const canvasRef = React.useRef(null);
+  const chartRef = React.useRef(null);
   const [timePeriod, setTimePeriod] = React.useState([
     "Last 7 Days",
     "Last 30 Days",
@@ -24,12 +26,15 @@ function IncomeLineGraph() {
 
   const IncomeLineGraph = (labels, data) => {
     // destroy the previous chart if it exists
-    const existingChart = Chart.getChart("incomeLineGraph");
-    if (existingChart) {
-      existingChart.destroy();
+    if (chartRef.current) {
+      chartRef.current.destroy();
+    }
+    if (!canvasRef.current) {
+      return;
     }
 
-    new Chart(document.getElementById("incomeLineGraph"), {
+    // create a new chart
+    chartRef.current = new Chart(canvasRef.current, {
       type: "line",
       data: {
         labels: labels,
@@ -88,14 +93,18 @@ function IncomeLineGraph() {
         break;
     }
     console.log("start date", startDate, currentDate);
+    //filterData between currentDate and startDate
     const filteredData = transactions.filter((transaction) => {
       const transactionDate = new Date(transaction.date);
-      return (
-        (startDate ? transactionDate >= startDate : true) &&
-        transactionDate <= currentDate
-      );
+      if (startDate) {
+        return transactionDate >= startDate && transactionDate <= currentDate;
+      } else {
+        return true;
+      }
     });
+
     console.log("Filtered Data", filteredData);
+    setFilteredTransactions(filteredData);
     const dates = filteredData.map((row) =>
       new Date(row.date).toLocaleDateString("en-US")
     );
@@ -140,7 +149,7 @@ function IncomeLineGraph() {
     flex-col
     justify-center
     items-center
-    w-[500px]
+    w-full
     h-full
     bg-white
     rounded-lg
@@ -157,7 +166,8 @@ function IncomeLineGraph() {
             setSelectedTimePeriod(() => e.target.value);
           }}
         />
-        <canvas id="incomeLineGraph"></canvas>
+        <canvas ref={canvasRef}></canvas>
+        <TransactionTable transactions={filteredTransactions} />
       </div>
     </div>
   );
