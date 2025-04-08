@@ -1,14 +1,21 @@
 import React, { useDebugValue, useEffect, useRef } from "react";
 import transactionService from "../../appwrite/transactionServices";
 import Chart from "chart.js/auto";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Select, TransactionTable } from "../index";
+import { setTransaction } from "../../Slices/transactionSlice";
 
 function ExpenseCategoryPieChart() {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(null);
   const [transactions, setTransactions] = React.useState([]);
   const [filteredTransactions, setFilteredTransactions] = React.useState([]);
+  const existingTransactions = useSelector((state) =>
+    state.transaction.transactionDataType === "ExpenseCategoryPieChart"
+      ? state.transaction.transactions
+      : []
+  );
+  const dispatch = useDispatch()
   const userId = useSelector((state) => state?.auth?.userData?.$id);
   const canvasRef = useRef(null);
   const chartRef = useRef(null);
@@ -81,7 +88,7 @@ function ExpenseCategoryPieChart() {
     console.log("start date", startDate, currentDate);
 
     //filterData between currentDate and startDate
-    const filteredData = transactions.filter((transaction) => { 
+    const filteredData = transactions.filter((transaction) => {
       const transactionDate = new Date(transaction.date);
       if (startDate) {
         return transactionDate >= startDate && transactionDate <= currentDate;
@@ -110,11 +117,29 @@ function ExpenseCategoryPieChart() {
   };
 
   useEffect(() => {
+    if(!canvasRef.current) return;
     handleTimePeriodChange();
   }, [transactions, selectedTimePeriod]);
 
+  useEffect(()=>{
+    if(!transactions.length) return;
+    dispatch(setTransaction({
+      transactionDataType: "ExpenseCategoryPieChart",
+      transactionData: transactions,
+    }))
+  },[transactions])
+
+
   useEffect(() => {
     setLoading(true);
+    if(existingTransactions?.length) {
+      handleTimePeriodChange();
+      setTransactions(existingTransactions);
+      setLoading(false);
+      return;
+    }
+
+
     transactionService
       .getUserExpenseTransactions({ userId })
       .then((response) => {

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Chart from "chart.js/auto";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Select, TransactionTable } from "../index";
 import transactionService from "../../appwrite/transactionServices";
+import { setTransaction } from "../../Slices/transactionSlice";
 
 function ExpenseCategoryToSubCategoryPieChart() {
   const [loading, setLoading] = useState(false);
@@ -14,6 +15,15 @@ function ExpenseCategoryToSubCategoryPieChart() {
   ] = useState([]);
   const [filteredTransactionsByCategory, setFilteredTransactionsByCategory] =
     useState([]);
+
+  const existingTransactions = useSelector((state) => 
+    state.transaction.transactionDataType ===
+      "ExpenseCategoryToSubCategoryPieChart"
+      ? state.transaction.transactions
+      : []
+  );
+  const dispatch = useDispatch();
+
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
 
@@ -127,6 +137,7 @@ function ExpenseCategoryToSubCategoryPieChart() {
   };
 
   useEffect(() => {
+    if(!canvasRef.current) return;
     handleTimePeriodChange();
   }, [transactions, selectedTimePeriod]);
 
@@ -134,8 +145,37 @@ function ExpenseCategoryToSubCategoryPieChart() {
     handleCategoryChange();
   }, [selectedCategory, filteredTransactionsByTimePeriod]);
 
+  useEffect(()=>{
+    if(!transactions.length) return;
+    dispatch(setTransaction({
+      transactionDataType: "ExpenseCategoryToSubCategoryPieChart",
+      transactionData: transactions,
+    }))
+  },[transactions])
+
   useEffect(() => {
     setLoading(true);
+    if (existingTransactions?.length) {
+      setTransactions(existingTransactions);
+      
+      const categoryList = {};
+      existingTransactions.map((transaction) => {
+        categoryList[transaction.categoryId.name] = 1;
+      });
+      console.log("categoryList", categoryList);
+      const categoryListArray = Object.keys(categoryList).map((category) => {
+        return category;
+      });
+      console.log("categoryListArray", categoryListArray);
+      setCategories(categoryListArray);
+      setSelectedCategory(categoryListArray[0]);
+      
+      handleTimePeriodChange();
+      
+      setLoading(false);
+      return;
+    }
+
     transactionService
       .getUserExpenseTransactions({ userId })
       .then((response) => {

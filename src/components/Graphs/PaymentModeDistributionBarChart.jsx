@@ -135,6 +135,7 @@ function PaymentModeDistributionBarChart() {
     if(!canvasRef.current) return;
     handleTimePeriodChange();
   }, [transactions, selectedTimePeriod]);
+
   useEffect(()=>{
     if(!transactions.length) return;
     dispatch(setTransaction({
@@ -146,7 +147,7 @@ function PaymentModeDistributionBarChart() {
 
   useEffect(() => {
     setLoading(true);
-    if (existingTransactions.length > 0) {
+    if (existingTransactions?.length > 0) {
       console.log("Transactions", existingTransactions);
       setLoading(false);
       handleTimePeriodChange();

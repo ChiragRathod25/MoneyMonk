@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Chart from "chart.js/auto";
 import transactionService from "../../appwrite/transactionServices";
 import { Select, TransactionTable } from "../index";
+import { setTransaction } from "../../Slices/transactionSlice";
 
 function ExpenseLineGraph() {
   const [error, setError] = React.useState(null);
@@ -10,6 +11,13 @@ function ExpenseLineGraph() {
   const userId = useSelector((state) => state?.auth?.userData?.$id);
   const [transactions, setTransactions] = React.useState([]);
   const [filteredTransactions, setFilteredTransactions] = useState([]);
+  const existingTransactions = useSelector((state) =>
+    state.transaction.transactionDataType === "ExpenseLineGraph"
+
+      ? state.transaction.transactions
+      : []
+  );
+  const dispatch = useDispatch();
   const canvasRef = useRef(null);
   const chartRef = useRef(null);
   const [timePeriod, setTimePeriod] = React.useState([
@@ -116,8 +124,27 @@ function ExpenseLineGraph() {
     handleTimePeriodChange();
   }, [transactions, selectedTimePeriod]);
 
+ useEffect(()=>{
+     if(!transactions.length) return;
+     dispatch(setTransaction({
+      transactionData:transactions,
+       transactionDataType: "ExpenseLineGraph",
+     }));
+     
+   },[transactions])
+ 
+
   useEffect(() => {
     setLoading(true);
+    if(!userId) return;
+    // Check if transactions are already fetched
+    if (existingTransactions?.length > 0) {
+      handleTimePeriodChange();
+      setTransactions(existingTransactions);
+      setLoading(false);
+      return;
+    }
+    
     transactionService
       .getUserExpenseTransactions({ userId })
       .then((response) => {

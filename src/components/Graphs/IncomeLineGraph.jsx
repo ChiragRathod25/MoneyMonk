@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
 import transactionService from "../../appwrite/transactionServices";
 import Chart from "chart.js/auto";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Select, TransactionTable } from "../index";
+import { setTransaction } from "../../Slices/transactionSlice";
 
 function IncomeLineGraph() {
   const [error, setError] = React.useState(null);
@@ -10,6 +11,14 @@ function IncomeLineGraph() {
   const userId = useSelector((state) => state?.auth?.userData?.$id);
   const [transactions, setTransactions] = React.useState([]);
   const [filteredTransactions, setFilteredTransactions] = React.useState([]);
+  const existingTransactions = useSelector((state) =>
+    state.transaction.transactionDataType === "IncomeLineGraph"
+      ? state.transaction.transactions
+      : []
+  );
+  const dispatch = useDispatch();
+
+
   const canvasRef = React.useRef(null);
   const chartRef = React.useRef(null);
   const [timePeriod, setTimePeriod] = React.useState([
@@ -116,8 +125,26 @@ function IncomeLineGraph() {
     handleTimePeriodChange();
   }, [transactions, selectedTimePeriod]);
 
+  useEffect(()=>{
+      if(!transactions.length) return;
+      dispatch(setTransaction({
+        transactionData:transactions,
+        transactionDataType: "IncomeLineGraph",
+      }));
+      
+    },[transactions])
+  
+
   useEffect(() => {
     setLoading(true);
+    if (existingTransactions?.length > 0) {
+      console.log("Transactions", existingTransactions);
+      setLoading(false);
+      handleTimePeriodChange();
+      setTransactions(existingTransactions);
+      return;
+    }
+
     transactionService
       .getUserIncomeTransactions({ userId })
       .then((response) => {
