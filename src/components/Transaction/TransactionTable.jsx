@@ -2,6 +2,8 @@ import React from "react";
 import { motion } from "framer-motion";
 import { ArrowDownCircle, ArrowUpCircle, CreditCard } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setTransaction } from "../../Slices/transactionSlice";
 
 const typeIcon = {
   income: (
@@ -18,8 +20,14 @@ const statusStyle = {
   pending: "bg-yellow-100 text-yellow-700 dark:bg-yellow-800/20 dark:text-yellow-300",
 };
 
+
 const TransactionTable = ({ transactions = [] }) => {
   const navigate = useNavigate();
+  const dispatch=useDispatch();
+  const handleClick=(transaction)=>{
+    navigate(`/transaction/view/${transaction.$id}`)
+  }
+  
 
   return (
     <div className="w-full overflow-x-auto rounded-2xl border border-gray-200 dark:border-gray-700 shadow-lg bg-white dark:bg-[#0f172a]">
@@ -46,7 +54,7 @@ const TransactionTable = ({ transactions = [] }) => {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.03 }}
-              onClick={() => navigate(`/transaction/${tx.$id}`)}
+              onClick={() => handleClick(tx)}
               className="group cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1c2431] transition duration-300 text-gray-800 dark:text-gray-300"
             >
               <td className="px-6 py-4 whitespace-nowrap flex items-center gap-3 font-medium">

@@ -1,20 +1,23 @@
 import React, { useState } from "react";
 import { Button } from "../";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import LogoutBtn from "./LogoutBtn";
-import { Menu, X } from "lucide-react"; 
+import { Menu, X } from "lucide-react";
 
 function Header() {
   const authStatus = useSelector((state) => state.auth.status);
   const [menuOpen, setMenuOpen] = useState(false);
-
+  const navigate = useNavigate();
   return (
     <nav className="bg-gradient-to-r from-blue-600 to-indigo-500 text-white shadow-md">
       <div className="container mx-auto flex justify-between items-center py-4 px-6">
         {/* App Logo */}
-        <div className="text-2xl font-bold">
-          <Link to="/">💰 Expense Tracker</Link>
+        <div className="text-2xl font-bold" onClick={()=>navigate("/")}>
+          {/* <Link to="/">💰 MoneyMonk</Link> */}
+          <Link to="/">
+            <img src="/logo.png" alt="Logo" className="h-22 w-auto" />
+          </Link>
         </div>
 
         {/* Mobile Menu Button */}
@@ -48,8 +51,15 @@ function Header() {
         <div className="md:hidden bg-white text-gray-800 shadow-lg rounded-b-lg py-4">
           {!authStatus ? (
             <>
-              <Link to="/register" className="block px-6 py-2 hover:bg-gray-200">Sign Up</Link>
-              <Link to="/login" className="block px-6 py-2 hover:bg-gray-200">Login</Link>
+              <Link
+                to="/register"
+                className="block px-6 py-2 hover:bg-gray-200"
+              >
+                Sign Up
+              </Link>
+              <Link to="/login" className="block px-6 py-2 hover:bg-gray-200">
+                Login
+              </Link>
             </>
           ) : (
             <div className="px-6">

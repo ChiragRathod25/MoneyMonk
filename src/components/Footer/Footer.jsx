@@ -5,7 +5,7 @@ function Footer() {
     <footer className="bg-dark-blue text-white py-6">
       <div className="container mx-auto text-center">
         <div className="mb-4">
-          <h2 className="text-xl font-bold">Expense Tracker</h2>
+          <h2 className="text-xl font-bold">MoneyMonk</h2>
           <p className="text-sm">Manage your expenses efficiently</p>
         </div>
         <div className="flex justify-center space-x-4 mb-4">
@@ -14,7 +14,7 @@ function Footer() {
           <a href="/privacy" className="text-teal-500 hover:text-teal-600">Privacy Policy</a>
         </div>
         <div className="text-sm">
-          &copy; {new Date().getFullYear()} Expense Tracker. All rights reserved.
+          &copy; {new Date().getFullYear()} MoneyMonk. All rights reserved.
         </div>
       </div>
     </footer>

@@ -14,6 +14,7 @@ import SubCategoryForm from "./Form/SubCategory/SubCategoryForm"
 import PaymentModeForm from "./Form/PaymentMode/PaymentModeForm"
 import TransactionCard from "./Transaction/TransactionCard"
 import TransactionTable from "./Transaction/TransactionTable"
+import TransactionDetails from "./Transaction/TransactionDetails"
 
 import ExpenseCategoryPieChart from "./Graphs/ExpenseCategoryPieChart"
 import ExpenseCategoryToSubCategoryPieChart from "./Graphs/ExpenseCategoryToSubCategoryPieChart"
@@ -39,6 +40,7 @@ export{
     SubCategoryForm,
     PaymentModeForm,
     TransactionCard,
+    TransactionDetails,
     ExpenseCategoryPieChart,
     ExpenseCategoryToSubCategoryPieChart,
     IncomeSubCategoryPieChart,

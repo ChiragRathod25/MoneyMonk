@@ -7,6 +7,7 @@ import transactionService from "../../appwrite/transactionServices";
 import categoryService from "../../appwrite/categoryServices";
 import subCategoryService from "../../appwrite/subCategoryServices";
 import paymentService from "../../appwrite/paymentServices";
+import bucketService from "../../appwrite/bucketServices";
 
 function TransactionForm({ transaction, transacationType }) {
   console.log("TransactionForm called for", transacationType);
@@ -72,24 +73,21 @@ function TransactionForm({ transaction, transacationType }) {
       .then((response) => {
         console.log("getAllCategories response");
         console.log(response);
-        setCategories(response.documents)
+        setCategories(response.documents);
         return response;
-      }).then((response)=>{
-
-          // if type=='Income' set categoryId to Income category
-          console.log("Categories", response);
-          if (transacationType === "Income") {
-            setValue(
-              "categoryId",
-              response.documents.find((category) => category.name === "Income").$id
-            );
-          }else{
-            setValue(
-              "categoryId",
-              response.documents[0].$id
-            )
-          }
-
+      })
+      .then((response) => {
+        // if type=='Income' set categoryId to Income category
+        console.log("Categories", response);
+        if (transacationType === "Income") {
+          setValue(
+            "categoryId",
+            response.documents.find((category) => category.name === "Income")
+              .$id
+          );
+        } else {
+          setValue("categoryId", response.documents[0].$id);
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -121,8 +119,25 @@ function TransactionForm({ transaction, transacationType }) {
       });
   }, []);
 
+
+  
   const createTransaction = async (data) => {
     console.log("createTransaction called");
+    // upload file to appwrite storage
+    if (data.reference && data.reference.length > 0) {
+      const file = data.reference[0];
+      console.log("file", file);
+      try {
+          const fileResponse=await bucketService.uploadFile(file);
+          console.log("fileResponse", fileResponse);
+          data.reference = fileResponse.$id;
+      } catch (error) {
+          console.log("Error uploading file", error);
+          setError(error.message);
+      }
+    }
+
+
     await transactionService
       .createTrasanction(data, userId)
       .then((response) => {
@@ -254,6 +269,7 @@ function TransactionForm({ transaction, transacationType }) {
               ))}
           </select>
 
+          <Input type="file" label="Reference" {...register("reference")} />
           <div className="flex justify-between mt-4">
             <Button
               text="Cancel"

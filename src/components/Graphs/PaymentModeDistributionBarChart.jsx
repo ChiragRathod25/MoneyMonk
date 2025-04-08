@@ -1,17 +1,25 @@
 import React, { useEffect, useRef } from "react";
 import Chart from "chart.js/auto";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Select, TransactionTable } from "../index";
 import transactionService from "../../appwrite/transactionServices";
+import { setTransaction } from "../../Slices/transactionSlice";
 
 function PaymentModeDistributionBarChart() {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(null);
   const [transactions, setTransactions] = React.useState([]);
+
+  const existingTransactions = useSelector((state) =>
+    state.transaction.transactionDataType === "PaymentModeDistributionBarChart"
+      ? state.transaction.transactions
+      : []
+  );
   const [filteredTransactions, setFilteredTransactions] = React.useState([]);
   const userId = useSelector((state) => state?.auth?.userData?.$id);
   const canvasRef = useRef(null);
   const chartRef = useRef(null);
+  const dispatch = useDispatch();
 
   const [timePeriod, setTimePeriod] = React.useState([
     "Last 7 Days",
@@ -31,6 +39,7 @@ function PaymentModeDistributionBarChart() {
       chartRef.current.destroy();
     }
     if (!canvasRef.current) {
+      console.error("Canvas reference is null or undefined");
       return;
     }
 
@@ -119,15 +128,31 @@ function PaymentModeDistributionBarChart() {
     console.log("Filtered Data", filteredData);
     console.log("category", category);
     console.log("paymentModeArray", paymentModeArray);
-    PaymentModeBarChart(paymentModeArray);
+    PaymentModeBarChart(paymentModeArray);    
   };
 
   useEffect(() => {
+    if(!canvasRef.current) return;
     handleTimePeriodChange();
   }, [transactions, selectedTimePeriod]);
+  useEffect(()=>{
+    if(!transactions.length) return;
+    dispatch(setTransaction({
+      transactionData:transactions,
+      transactionDataType: "PaymentModeDistributionBarChart",
+    }));
+    
+  },[transactions])
 
   useEffect(() => {
     setLoading(true);
+    if (existingTransactions.length > 0) {
+      console.log("Transactions", existingTransactions);
+      setLoading(false);
+      handleTimePeriodChange();
+      setTransactions(existingTransactions);
+      return;
+    }
 
     transactionService
       .getUserTransactions({ userId })
