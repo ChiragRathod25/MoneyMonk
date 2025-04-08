@@ -13,8 +13,12 @@ import Transaction from "./Transaction/Transaction";
 
 
 import Report from "./Dashboard/Report";
-
-
+import ExpenseCategoryPieChart from "./Dashboard/Graphs/ExpenseCategoryPieChart";
+import ExpenseCategoryToSubCategoryPieChart from "./Dashboard/Graphs/ExpenseCategoryToSubCategoryPieChart";
+import IncomeSubCategoryPieChart from "./Dashboard/Graphs/IncomeSubCategoryPieChart";
+import PaymentModeDistributionBarChart from "./Dashboard/Graphs/PaymentModeDistributionBarChart";
+import IncomeLineGraph from "./Dashboard/Graphs/IncomeLineGraph";
+import ExpenseLineGraph from "./Dashboard/Graphs/ExpenseLineGraph";
 
 export {
     SignUp,
@@ -29,7 +33,14 @@ export {
     AllIncome,
     AllTransactions,
     Report,
-    Transaction
+    Transaction,
+    ExpenseCategoryPieChart,
+    ExpenseCategoryToSubCategoryPieChart,
+    IncomeSubCategoryPieChart,
+    PaymentModeDistributionBarChart,
+    IncomeLineGraph,
+    ExpenseLineGraph,
+    
 
     
 

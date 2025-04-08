@@ -2,15 +2,14 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Chart from "chart.js/auto";
 import transactionService from "../../appwrite/transactionServices";
-import { Select, TransactionTable } from "../index";
+import { Select } from "../index";
 import { setTransaction } from "../../Slices/transactionSlice";
 
-function ExpenseLineGraph() {
+function ExpenseLineGraph({setFilteredTransactions}) {
   const [error, setError] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
   const userId = useSelector((state) => state?.auth?.userData?.$id);
   const [transactions, setTransactions] = React.useState([]);
-  const [filteredTransactions, setFilteredTransactions] = useState([]);
   const existingTransactions = useSelector((state) =>
     state.transaction.transactionDataType === "ExpenseLineGraph"
 
@@ -194,7 +193,7 @@ function ExpenseLineGraph() {
         />
 
         <canvas ref={canvasRef}></canvas>
-        <TransactionTable transactions={filteredTransactions} />
+      
       </div>
     </div>
   );

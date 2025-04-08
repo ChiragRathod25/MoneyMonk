@@ -1,11 +1,11 @@
 import React, { useEffect, useRef } from "react";
 import Chart from "chart.js/auto";
 import { useDispatch, useSelector } from "react-redux";
-import { Select, TransactionTable } from "../index";
+import { Select } from "../index";
 import transactionService from "../../appwrite/transactionServices";
 import { setTransaction } from "../../Slices/transactionSlice";
 
-function PaymentModeDistributionBarChart() {
+function PaymentModeDistributionBarChart({setFilteredTransactions}) {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(null);
   const [transactions, setTransactions] = React.useState([]);
@@ -15,7 +15,7 @@ function PaymentModeDistributionBarChart() {
       ? state.transaction.transactions
       : []
   );
-  const [filteredTransactions, setFilteredTransactions] = React.useState([]);
+
   const userId = useSelector((state) => state?.auth?.userData?.$id);
   const canvasRef = useRef(null);
   const chartRef = useRef(null);
@@ -205,7 +205,7 @@ function PaymentModeDistributionBarChart() {
           }}
         />
         <canvas ref={canvasRef}></canvas>
-        <TransactionTable transactions={filteredTransactions} />
+       
       </div>
     </div>
   );

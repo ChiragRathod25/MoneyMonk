@@ -2,15 +2,14 @@ import React, { useEffect } from "react";
 import transactionService from "../../appwrite/transactionServices";
 import Chart from "chart.js/auto";
 import { useDispatch, useSelector } from "react-redux";
-import { Select, TransactionTable } from "../index";
+import { Select } from "../index";
 import { setTransaction } from "../../Slices/transactionSlice";
 
-function IncomeLineGraph() {
+function IncomeLineGraph({setFilteredTransactions}) {
   const [error, setError] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
   const userId = useSelector((state) => state?.auth?.userData?.$id);
   const [transactions, setTransactions] = React.useState([]);
-  const [filteredTransactions, setFilteredTransactions] = React.useState([]);
   const existingTransactions = useSelector((state) =>
     state.transaction.transactionDataType === "IncomeLineGraph"
       ? state.transaction.transactions
@@ -194,7 +193,7 @@ function IncomeLineGraph() {
           }}
         />
         <canvas ref={canvasRef}></canvas>
-        <TransactionTable transactions={filteredTransactions} />
+      
       </div>
     </div>
   );

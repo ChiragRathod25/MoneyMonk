@@ -5,8 +5,28 @@ import App from "./App.jsx";
 import { Provider } from "react-redux";
 import store from "./store/store.js";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { SignUp, Login, Home, AddExpense, AddIncome,AddCategory,AddSubCategory,AddPaymentMode,AllExpense,AllIncome, Report, AllTransactions,Transaction } from "./pages";
-import {AuthLayout} from "./components"
+import {
+  SignUp,
+  Login,
+  Home,
+  AddExpense,
+  AddIncome,
+  AddCategory,
+  AddSubCategory,
+  AddPaymentMode,
+  AllExpense,
+  AllIncome,
+  Report,
+  AllTransactions,
+  Transaction,
+  ExpenseCategoryPieChart,
+  ExpenseCategoryToSubCategoryPieChart,
+  IncomeSubCategoryPieChart,
+  PaymentModeDistributionBarChart,
+  IncomeLineGraph,
+  ExpenseLineGraph,
+} from "./pages";
+import { AuthLayout } from "./components";
 
 const router = createBrowserRouter([
   {
@@ -37,7 +57,7 @@ const router = createBrowserRouter([
         path: "/category",
         element: (
           // <AuthLayout>
-            <AddCategory />
+          <AddCategory />
           // </AuthLayout>
         ),
       },
@@ -45,7 +65,7 @@ const router = createBrowserRouter([
         path: "/subcategory",
         element: (
           // <AuthLayout>
-            <AddSubCategory />
+          <AddSubCategory />
           // </AuthLayout>
         ),
       },
@@ -53,7 +73,7 @@ const router = createBrowserRouter([
         path: "/paymentmode",
         element: (
           // <AuthLayout>
-            <AddPaymentMode />
+          <AddPaymentMode />
           // </AuthLayout>
         ),
       },
@@ -61,25 +81,24 @@ const router = createBrowserRouter([
         path: "transaction",
         children: [
           {
-            path:"",
+            path: "",
             element: (
               // <AuthLayout>
-                <AllTransactions />
+              <AllTransactions />
               // </AuthLayout>
             ),
           },
           {
-              path:"view/:transactionId",
-              element:(
-                // <AuthLayout>
-                  <Transaction />
-                // </AuthLayout>
-
-              )
+            path: "view/:transactionId",
+            element: (
+              // <AuthLayout>
+              <Transaction />
+              // </AuthLayout>
+            ),
           },
           {
             path: "expense",
-            children:[
+            children: [
               {
                 path: "add",
                 element: (
@@ -95,47 +114,79 @@ const router = createBrowserRouter([
                     <AllExpense />
                   </AuthLayout>
                 ),
-              }
-            ]
+              },
+            ],
           },
           {
             path: "income",
-            children:[
+            children: [
               {
                 path: "add",
-                element:(
+                element: (
                   <AuthLayout>
                     <AddIncome />
                   </AuthLayout>
-                )
+                ),
               },
               {
-                path:"all",
-                element:(
+                path: "all",
+                element: (
                   // <AuthLayout>
-                    <AllIncome />
+                  <AllIncome />
                   // </AuthLayout>
-                )
-              }
-            ]
+                ),
+              },
+            ],
           },
         ],
       },
       {
-        path:"reports",
-        element:(
-          // <AuthLayout>
-            <Report />
-          // {/* </AuthLayout> */}
-        )
-      }
+        path: "reports",
+        // element: (
+        //   // <AuthLayout>
+        //   <Report />
+        //   // {/* </AuthLayout> */}
+        // ),
+        children:[
+          {
+            path:"",
+            element:<Report/>
+
+          },
+          {
+            path:"expense-category-pie-chart",
+            element:<ExpenseCategoryPieChart/>
+          },
+          {
+            path:"expense-category-to-subcategory-pie-chart",
+            element:<ExpenseCategoryToSubCategoryPieChart/>
+          },
+          {
+            path:"income-subcategory-pie-chart",
+            element:<IncomeSubCategoryPieChart/>
+          },
+          {
+            path:"payment-mode-distribution-bar-chart",
+            element:<PaymentModeDistributionBarChart/>
+          },
+          {
+            path:"income-line-graph",
+            element:<IncomeLineGraph/>
+          },
+          {
+            path:"expense-line-graph",
+            element:<ExpenseLineGraph/>
+          }
+
+        ]
+      },
     ],
   },
 ]);
 createRoot(document.getElementById("root")).render(
   // <StrictMode>
-    <Provider store={store}>
-      <RouterProvider router={router} />
-    </Provider>
+  <Provider store={store}>
+    <RouterProvider router={router} />
+  </Provider>
   // {/* </StrictMode> */}
 );

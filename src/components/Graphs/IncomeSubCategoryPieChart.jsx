@@ -2,14 +2,13 @@ import React, { useDebugValue, useEffect, useState } from "react";
 import transactionService from "../../appwrite/transactionServices";
 import Chart from "chart.js/auto";
 import { useDispatch, useSelector } from "react-redux";
-import { Select, TransactionTable } from "../index";
+import { Select } from "../index";
 import { setTransaction } from "../../Slices/transactionSlice";
 
-const IncomeSubCategoryPieChart = () => {
+const IncomeSubCategoryPieChart = ({setFilteredTransactions}) => {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(null);
   const [transactions, setTransactions] = React.useState([]);
-  const [filteredTransactions, setFilteredTransactions] = useState([]);
 
   const existingTransactions = useSelector((state) =>
     state.transaction.transactionDataType === "IncomeSubCategoryPieChart"
@@ -194,7 +193,7 @@ const IncomeSubCategoryPieChart = () => {
           }}
         />
         <canvas ref={canvasRef}></canvas>
-        <TransactionTable transactions={filteredTransactions} />
+
       </div>
     </div>
   );

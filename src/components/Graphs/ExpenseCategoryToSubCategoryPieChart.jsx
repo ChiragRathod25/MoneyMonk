@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import Chart from "chart.js/auto";
 import { useDispatch, useSelector } from "react-redux";
-import { Select, TransactionTable } from "../index";
+import { Select } from "../index";
 import transactionService from "../../appwrite/transactionServices";
 import { setTransaction } from "../../Slices/transactionSlice";
 
-function ExpenseCategoryToSubCategoryPieChart() {
+function ExpenseCategoryToSubCategoryPieChart({setFilteredTransactionsByCategory}) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [transactions, setTransactions] = useState([]);
@@ -13,8 +13,6 @@ function ExpenseCategoryToSubCategoryPieChart() {
     filteredTransactionsByTimePeriod,
     setFilteredTransactionsByTimePeriod,
   ] = useState([]);
-  const [filteredTransactionsByCategory, setFilteredTransactionsByCategory] =
-    useState([]);
 
   const existingTransactions = useSelector((state) => 
     state.transaction.transactionDataType ===
@@ -246,7 +244,7 @@ function ExpenseCategoryToSubCategoryPieChart() {
         />
         <canvas ref={canvasRef}></canvas>
 
-        <TransactionTable transactions={filteredTransactionsByCategory} />
+  
       </div>
     </>
   );
