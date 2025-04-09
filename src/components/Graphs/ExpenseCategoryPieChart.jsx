@@ -1,11 +1,11 @@
-import React, { useDebugValue, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import transactionService from "../../appwrite/transactionServices";
 import Chart from "chart.js/auto";
 import { useDispatch, useSelector } from "react-redux";
 import { Select } from "../index";
 import { setTransaction } from "../../Slices/transactionSlice";
 
-function ExpenseCategoryPieChart({setFilteredTransactions}) {
+function ExpenseCategoryPieChart({ setFilteredTransactions }) {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(null);
   const [transactions, setTransactions] = React.useState([]);
@@ -14,11 +14,11 @@ function ExpenseCategoryPieChart({setFilteredTransactions}) {
       ? state.transaction.transactions
       : []
   );
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const userId = useSelector((state) => state?.auth?.userData?.$id);
   const canvasRef = useRef(null);
   const chartRef = useRef(null);
-  const [timePeriod, setTimePeriod] = React.useState([
+  const [timePeriod] = React.useState([
     "Last 7 Days",
     "Last 30 Days",
     "Last 60 Days",
@@ -27,28 +27,24 @@ function ExpenseCategoryPieChart({setFilteredTransactions}) {
     "Last 2 Years",
     "All Time",
   ]);
-
-  const [selectedTimePeriod, setSelectedTimePeriod] =
-    React.useState("Last 7 Days");
+  const [selectedTimePeriod, setSelectedTimePeriod] = React.useState("Last 7 Days");
 
   const expensePieChart = function (data) {
-    // destroy the previous chart if it exist
-    if (chartRef.current) {
-      chartRef.current.destroy();
-    }
-    if (!canvasRef.current) {
-      return;
-    }
+    if (chartRef.current) chartRef.current.destroy();
+    if (!canvasRef.current) return;
 
-    // create a new chart
     chartRef.current = new Chart(canvasRef.current, {
       type: "pie",
       data: {
         labels: data.map((row) => row.name),
         datasets: [
           {
-            label: `Acquisitions ${selectedTimePeriod}`,
+            label: `Expenses - ${selectedTimePeriod}`,
             data: data.map((row) => row.amount),
+            backgroundColor: [
+              "#f87171", "#fb923c", "#facc15", "#4ade80", "#60a5fa", "#a78bfa", "#f472b6",
+            ],
+            borderWidth: 1,
           },
         ],
       },
@@ -84,9 +80,7 @@ function ExpenseCategoryPieChart({setFilteredTransactions}) {
       default:
         break;
     }
-    console.log("start date", startDate, currentDate);
 
-    //filterData between currentDate and startDate
     const filteredData = transactions.filter((transaction) => {
       const transactionDate = new Date(transaction.date);
       if (startDate) {
@@ -95,8 +89,9 @@ function ExpenseCategoryPieChart({setFilteredTransactions}) {
         return true;
       }
     });
-    console.log("filteredData", filteredData);
+
     setFilteredTransactions(filteredData);
+
     const category = {};
     for (const cat of filteredData) {
       if (!category[cat.categoryId.name]) {
@@ -106,48 +101,42 @@ function ExpenseCategoryPieChart({setFilteredTransactions}) {
       }
     }
 
-    // convert object to array
     const categoryArray = Object.entries(category).map(([key, value]) => ({
       name: key,
       amount: value,
     }));
-    console.log("categoryArray", categoryArray);
+
     expensePieChart(categoryArray);
   };
 
   useEffect(() => {
-    if(!canvasRef.current) return;
+    if (!canvasRef.current) return;
     handleTimePeriodChange();
   }, [transactions, selectedTimePeriod]);
 
-  useEffect(()=>{
-    if(!transactions.length) return;
+  useEffect(() => {
+    if (!transactions.length) return;
     dispatch(setTransaction({
       transactionDataType: "ExpenseCategoryPieChart",
       transactionData: transactions,
-    }))
-  },[transactions])
-
+    }));
+  }, [transactions]);
 
   useEffect(() => {
     setLoading(true);
-    if(existingTransactions?.length) {
+    if (existingTransactions?.length) {
       handleTimePeriodChange();
       setTransactions(existingTransactions);
       setLoading(false);
       return;
     }
 
-
     transactionService
       .getUserExpenseTransactions({ userId })
       .then((response) => {
-        console.log(response.documents);
         setTransactions(response.documents);
-        return response.documents;
       })
       .catch((error) => {
-        console.log(error);
         setError(error);
       })
       .finally(() => {
@@ -156,43 +145,53 @@ function ExpenseCategoryPieChart({setFilteredTransactions}) {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
-  }
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
-  if (!transactions) {
-    return <div>No transactions found</div>;
-  }
-
-  return (
-    <>
-      <div>ExpenseCategoryPieChart</div>
-      <div
-        className="
-    flex-col
-    justify-center
-    items-center
-    w-full
-    h-full
-    bg-white
-    rounded-lg
-    shadow-md
-    p-4
-    "
-      >
-        <Select
-          options={timePeriod}
-          className="w-full"
-          label="Select Time Period"
-          selectedOption={selectedTimePeriod}
-          onChange={(e) => {
-            setSelectedTimePeriod(() => e.target.value);
-          }}
-        />
-        <canvas ref={canvasRef}></canvas>
+    return (
+      <div className="w-full h-full flex items-center justify-center py-8">
+        <p className="text-gray-600 text-lg animate-pulse">Loading data...</p>
       </div>
-    </>
+    );
+  }
+  
+  if (error) {
+    return (
+      <div className="w-full h-full flex items-center justify-center py-8">
+        <p className="text-red-500 font-medium">
+          Error: {error.message || "Something went wrong"}
+        </p>
+      </div>
+    );
+  }
+  if (!transactions || transactions.length === 0) {
+    return (
+      <div className="w-full h-full flex items-center justify-center py-8">
+        <p className="text-gray-600 text-lg animate-pulse">No transactions found</p>
+      </div>
+    );
+  }
+  return (
+    <div className="w-full max-w-4xl mx-auto p-4">
+      <h2 className="text-2xl font-semibold text-gray-800 mb-4 text-center">
+        Expense by Category
+      </h2>
+
+      <div className="bg-white shadow-lg rounded-xl p-4 sm:p-6 md:p-8">
+        <div className="mb-6">
+          <Select
+            options={timePeriod}
+            className="w-full"
+            label="Select Time Period"
+            selectedOption={selectedTimePeriod}
+            onChange={(e) => setSelectedTimePeriod(e.target.value)}
+          />
+        </div>
+
+        <div className="w-full flex justify-center">
+          <div className="w-full max-w-md">
+            <canvas ref={canvasRef}></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 

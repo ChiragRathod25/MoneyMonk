@@ -30,7 +30,7 @@ const TransactionTable = ({ transactions = [] }) => {
   
 
   return (
-    <div className="w-full overflow-x-auto rounded-2xl border border-gray-200 dark:border-gray-700 shadow-lg bg-white dark:bg-[#0f172a]">
+    <div className="w-full overflow-x-auto rounded-2xl border border-gray-200 dark:border-gray-700 shadow-lg bg-white dark:bg-[#0f172a] m-4 p-4 md:p-6 lg:p-8 w-full max-w-7xl mx-auto">
       <motion.table
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

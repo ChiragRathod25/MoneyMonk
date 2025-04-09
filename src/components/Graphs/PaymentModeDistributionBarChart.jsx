@@ -171,44 +171,55 @@ function PaymentModeDistributionBarChart({setFilteredTransactions}) {
       });
   }, [userId]);
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="w-full h-full flex items-center justify-center py-8">
+        <p className="text-gray-600 text-lg animate-pulse">Loading data...</p>
+      </div>
+    );
   }
+  
   if (error) {
-    return <div>Error: {error.message}</div>;
+    return (
+      <div className="w-full h-full flex items-center justify-center py-8">
+        <p className="text-red-500 font-medium">
+          Error: {error.message || "Something went wrong"}
+        </p>
+      </div>
+    );
   }
-  if (!transactions.length) {
-    return <div>No transactions found</div>;
+  if (!transactions || transactions.length === 0) {
+    return (
+      <div className="w-full h-full flex items-center justify-center py-8">
+        <p className="text-gray-600 text-lg animate-pulse">No transactions found</p>
+      </div>
+    );
   }
-
   return (
-    <div>
-      <h1>Payment Mode Distribution Bar Chart</h1>
-      <div
-        className="
-      flex-col
-      justify-center
-      items-center
-      w-full
-      h-full
-      bg-white
-      rounded-lg
-      shadow-md
-      p-4
-      "
-      >
-        <Select
-          options={timePeriod}
-          selectedOption={selectedTimePeriod}
-          label="Select Time Period"
-          onChange={(e) => {
-            setSelectedTimePeriod(e.target.value);
-          }}
-        />
-        <canvas ref={canvasRef}></canvas>
-       
+    <div className="w-full max-w-4xl mx-auto px-4">
+      <h1 className="text-2xl font-semibold text-center text-gray-800 mb-4">
+        Payment Mode Distribution Bar Chart
+      </h1>
+  
+      <div className="bg-white rounded-2xl shadow-md p-6 flex flex-col gap-4 items-center">
+        <div className="w-full">
+          <Select
+            options={timePeriod}
+            selectedOption={selectedTimePeriod}
+            label="Select Time Period"
+            onChange={(e) => {
+              setSelectedTimePeriod(e.target.value);
+            }}
+            className="w-full"
+          />
+        </div>
+  
+        <div className="w-full overflow-x-auto">
+          <canvas ref={canvasRef} className="w-full h-[300px]"></canvas>
+        </div>
       </div>
     </div>
   );
+  
 }
 
 export default PaymentModeDistributionBarChart;

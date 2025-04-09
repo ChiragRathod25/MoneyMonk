@@ -54,7 +54,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/category",
+        path: "/add-category",
         element: (
           // <AuthLayout>
           <AddCategory />
@@ -62,7 +62,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/subcategory",
+        path: "/add-subcategory",
         element: (
           // <AuthLayout>
           <AddSubCategory />
@@ -70,7 +70,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/paymentmode",
+        path: "/add-payment-mode",
         element: (
           // <AuthLayout>
           <AddPaymentMode />

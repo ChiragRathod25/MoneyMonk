@@ -169,12 +169,12 @@ function TransactionForm({ transaction, transacationType }) {
   }
 
   return (
-    <div className=" p-8 min-h-screen flex items-center justify-center bg-light-gray">
+    <div className="min-h-screen flex items-center justify-center bg-light-gray px-4 py-8">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold text-dark-blue mb-6">
+        <h2 className="text-2xl font-bold text-dark-blue mb-6 text-center">
           Transaction Form
         </h2>
-        <form onSubmit={handleSubmit(createTransaction)}>
+        <form onSubmit={handleSubmit(createTransaction)} className="space-y-5">
           <Select
             {...register("type", { required: true })}
             label="Type"
@@ -209,67 +209,81 @@ function TransactionForm({ transaction, transacationType }) {
             placeholder="Date"
             label="Date"
           />
+  
+  <label htmlFor="categoryId" className="inline-block mb-1 pl-1 text-dark-blue font-semibold">
+  Category
+</label>
+<select
+  id="categoryId"
+  {...register("categoryId", { required: true })}
+  className="px-3 py-2 rounded-lg bg-white text-black outline-none focus:bg-gray-50 duration-200 border border-gray-200 w-full"
+>
+  {categories &&
+    categories.map((category) => (
+      <option key={category.$id} value={category.$id}>
+        {category.name}
+      </option>
+    ))}
+</select>
+<p
+  className="text-sm text-blue-600 hover:underline cursor-pointer mt-1"
+  onClick={() => navigate("/add-category")}
+>
+  + Add new category
+</p>
 
-          <label
-            className="inline-block mb-1 pl-1 text-dark-blue font-semibold"
-            htmlFor={"categoryId"}
-          >
-            {"Category"}
-          </label>
-          <select
-            className="px-3 py-2 rounded-lg bg-white text-black outline-none focus:bg-gray-50 duration-200 border border-gray-200 w-full"
-            {...register("categoryId", { required: true })}
-            id={"categoryId"}
-          >
-            {categories &&
-              categories.map((category) => (
-                <option key={category.$id} value={category.$id}>
-                  {category.name}
-                </option>
-              ))}
-          </select>
+<label htmlFor="subcategoryId" className="inline-block mb-1 pl-1 text-dark-blue font-semibold">
+  SubCategory
+</label>
+<select
+  id="subcategoryId"
+  {...register("subcategoryId", { required: true })}
+  className="px-3 py-2 rounded-lg bg-white text-black outline-none focus:bg-gray-50 duration-200 border border-gray-200 w-full"
+>
+  {subcategories &&
+    subcategories.map((subcategory) =>
+      subcategory.categoryId?.$id === categoryId ? (
+        <option key={subcategory.$id} value={subcategory.$id}>
+          {subcategory.name}
+        </option>
+      ) : null
+    )}
+</select>
+<p
+  className="text-sm text-blue-600 hover:underline cursor-pointer mt-1"
+  onClick={() => navigate("/add-subcategory")}
+>
+  + Add new subcategory
+</p>
 
-          <label
-            className="inline-block mb-1 pl-1 text-dark-blue font-semibold"
-            htmlFor={"subcategoryId"}
-          >
-            {"SubCategory"}
-          </label>
-          <select
-            className="px-3 py-2 rounded-lg bg-white text-black outline-none focus:bg-gray-50 duration-200 border border-gray-200 w-full"
-            {...register("subcategoryId", { required: true })}
-            id={"subcategoryId"}
-          >
-            {subcategories &&
-              subcategories.map((subcategory) =>
-                subcategory.categoryId?.$id == categoryId ? (
-                  <option key={subcategory.$id} value={subcategory.$id}>
-                    {subcategory.name}
-                  </option>
-                ) : null
-              )}
-          </select>
+<label htmlFor="paymentModeId" className="inline-block mb-1 pl-1 text-dark-blue font-semibold">
+  Payment Mode
+</label>
+<select
+  id="paymentModeId"
+  {...register("paymentModeId", { required: true })}
+  className="px-3 py-2 rounded-lg bg-white text-black outline-none focus:bg-gray-50 duration-200 border border-gray-200 w-full"
+>
+  {paymentMode &&
+    paymentMode.map((payment) => (
+      <option key={payment.$id} value={payment.$id}>
+        {payment.name}
+      </option>
+    ))}
+</select>
+<p
+  className="text-sm text-blue-600 hover:underline cursor-pointer mt-1"
+  onClick={() => navigate("/add-payment-mode")}
+>
+  + Add new payment mode
+</p>
 
-          <label
-            className="inline-block mb-1 pl-1 text-dark-blue font-semibold"
-            htmlFor={"paymentModeId"}
-          >
-            {"Payment Mode"}
-          </label>
-          <select
-            className="px-3 py-2 rounded-lg bg-white text-black outline-none focus:bg-gray-50 duration-200 border border-gray-200 w-full"
-            {...register("paymentModeId", { required: true })}
-            id={"paymentModeId"}
-          >
-            {paymentMode &&
-              paymentMode.map((payment) => (
-                <option key={payment.$id} value={payment.$id}>
-                  {payment.name}
-                </option>
-              ))}
-          </select>
-
-          <Input type="file" label="Reference" {...register("reference")} />
+          <Input
+            type="file"
+            label="Reference"
+            {...register("reference")}
+          />
+  
           <div className="flex justify-between mt-4">
             <Button
               text="Cancel"
@@ -277,20 +291,21 @@ function TransactionForm({ transaction, transacationType }) {
                 reset();
                 navigate("/");
               }}
-              className="bg-red-500 hover:bg-red-600"
+              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
             >
               Cancel
             </Button>
             <Button
               text="Reset"
-              onClick={() => {
-                reset();
-              }}
-              className="bg-orange-500 hover:bg-orange-600"
+              onClick={() => reset()}
+              className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded"
             >
               Reset
             </Button>
-            <Button type="submit" className="bg-teal-500 hover:bg-teal-600">
+            <Button
+              type="submit"
+              className="bg-teal-500 hover:bg-teal-600 text-white px-4 py-2 rounded"
+            >
               {transaction ? "Update Transaction" : "Add Transaction"}
             </Button>
           </div>
@@ -298,6 +313,7 @@ function TransactionForm({ transaction, transacationType }) {
       </div>
     </div>
   );
+  
 }
 
 export default TransactionForm;
